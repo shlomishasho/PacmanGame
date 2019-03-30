@@ -1,38 +1,50 @@
 import pygame
 import numpy
 from random import randint
-import itertools
 
-from point import  Point
+from point import Point, RoomPoint, PointStatus, RoomStatus
 from room import Room
 
-class MazeGenerator():
 
+class maze:
+    def __init__(self, width, height):
+        self.height = height
+        self.width = width
+        self.screen = pygame.display.set_mode ((self.height, self.width))
+        self.maze_matrix = self.init_maze_matrix ()
+
+    def init_maze_matrix(self):
+        return [Point (x, y) for y in range (self.width + 1) for x in range (self.height + 1)]
+
+    def draw_room(self, left, top, color, room):
+        pygame.draw.rect (self.screen, color, pygame.Rect (left, top, room.width, room.height))
+        for y in range (int(top), int(top + room.height)):
+            for x in range (int(left), int(left + room.width)):
+                self.maze_matrix[x][y] = RoomPoint (x, y, room.id)
+
+
+class MazeGenerator:
     WHITE = (255, 255, 255)
     MAX_OF_ROOMS = 10
 
-    def __init__(self,height,width):
+    def __init__(self, height, width):
         self.height = height
         self.width = width
-        pygame.init()
-        self.screen = pygame.display.set_mode((self.height, self.width))
-        # self.screen = pygame.Surface((self.height, self.width))
-        # check = pygame.PixelArray(self.screen)
-        self.maze = numpy.empty((height,width,))
-        self.maze[:] = numpy.nan
-
+        pygame.init ()
+        self.screen = pygame.display.set_mode ((self.height, self.width))
+        self.maze = maze (width, height)
         self.rooms = []
-        self.setup_maze()
+        self.setup_maze ()
 
-    def init_room(self,room_counter):
+    def init_room(self, room_counter):
 
-        x_coordinate = randint(0, self.width)
-        y_coordinate = randint(0, self.height)
+        x_coordinate = randint (0, self.width)
+        y_coordinate = randint (0, self.height)
         """maybe -> change the size of the rectangles"""
-        width_length = randint(50, 74)
-        height_lenght = randint(50,80)
+        width_length = randint (50, 74)
+        height_lenght = randint (50, 80)
 
-        new_room = Room(Point(x_coordinate, y_coordinate),width_length, height_lenght)
+        new_room = Room (Point (int(x_coordinate), int(y_coordinate)), int(width_length), int(height_lenght))
 
         top = new_room.center.y - new_room.height / 2
         if top < 0:
@@ -48,19 +60,16 @@ class MazeGenerator():
             right = self.width - 1
 
         is_valid_room = True
-        print(room_counter)
-        for i in range(room_counter):
-            if self.rooms[i].is_overlap(new_room):
-                print('try another loc.')
+        print (room_counter)
+        for i in range (room_counter):
+            if self.rooms[i].is_overlap (new_room):
+                print ('try another loc.')
                 is_valid_room = False
 
         if is_valid_room:
             """TODO : enter to maze points"""
-            self.rooms.append(new_room)
-            pygame.draw.rect(self.screen, self.WHITE, pygame.Rect(left, top, new_room.width, new_room.height))
-            # for i in range(top,bottom):
-            #     for j in range(left,right):
-            #         self.maze[i][j] = Point(i,j,new_room.id)
+            self.rooms.append (new_room)
+            self.maze.draw_room (left, top,self.WHITE,new_room)
             return True
         else:
             return False
@@ -71,15 +80,17 @@ class MazeGenerator():
         done = False
         room_counter = 0
         while not done:
-            for event in pygame.event.get():
+            for event in pygame.event.get ():
                 if event.type == pygame.QUIT:
                     done = True
             if room_counter < self.MAX_OF_ROOMS:
-                if self.init_room(room_counter):
+                if self.init_room (room_counter):
                     room_counter += 1
-                    pygame.display.flip()
+                    pygame.display.flip ()
         """TODO : call to dig tunnels function"""
 
         pass
+
+
 if __name__ == '__main__':
-    m1 = MazeGenerator(600,600)
+    m1 = MazeGenerator (600, 600)
