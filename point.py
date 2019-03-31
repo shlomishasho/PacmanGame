@@ -1,21 +1,28 @@
 from enum import Enum
 
 
-class PointStatus (Enum):
-    WALL = 0
-    SPACE = 1
-    PLAYER = 2
+class PointStatus ():
+    WALL = (0, 0, 0)
+    SPACE = (255, 255, 255)
+    PLAYER = ('some colors for Player')
+
+    @classmethod
+    def get_colors(cls):
+        return [cls.WALL, cls.SPACE, cls.PLAYER]
 
 
-class RoomStatus (Enum):
-    HEALTH = 3
-    WEAPON = 4
-    NONE=5
+class RoomStatus ():
+    HEALTH = (220, 20, 60)
+    AMMO = (72, 61, 139)
+    NONE = (255, 255, 255)
 
+    @classmethod
+    def get_colors(cls):
+        return [cls.HEALTH, cls.AMMO, cls.NONE]
 
 
 class Point:
-    def __init__(self, x, y,status=PointStatus.WALL):
+    def __init__(self, x, y, status=PointStatus.WALL):
         self._x = x
         self._y = y
         self._status = status
@@ -34,19 +41,25 @@ class Point:
 
     @status.setter
     def status(self, new_status):
-        self._status=new_status
+        self._status = new_status
 
 
-class RoomPoint(Point):
-    def __init__(self,x,y,room_id,status_in_room=RoomStatus.NONE):
-        super().__init__(x,y,PointStatus.SPACE)
-        self._status_in_room=status_in_room
-        self._room_id=room_id
+class RoomPoint (Point):
+    def __init__(self, x, y, room_id=None, status_in_room=RoomStatus.NONE):
+        super ().__init__ (x, y, PointStatus.SPACE)
+        self._status_in_room = status_in_room
+        self._room_id = room_id
 
     @property
     def status_in_room(self):
-        return self._status
+        return self._status_in_room
 
     @status_in_room.setter
     def status_in_room(self, new_status):
-        self._status_in_room=new_status
+        self._status_in_room = new_status
+
+    def set_id(self, new_id):
+        self._room_id = new_id
+
+    def __lt__(self, other):
+        return self.x < other.x and self.y < other.y
