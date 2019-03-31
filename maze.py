@@ -4,7 +4,7 @@ from random import randint
 
 from point import Point, RoomPoint, PointStatus, RoomStatus
 from room import Room, Coordinates
-
+from player import Player
 
 class maze:
     def __init__(self, width, height):
@@ -37,6 +37,10 @@ class maze:
     def draw_line(self, src_point, target_point, color):
         pygame.draw.line (self.screen, color, (src_point.x, src_point.y), (target_point.x, target_point.y), 2)
 
+    def draw_players(self,player):
+        pygame.draw.rect (self.screen, player.color, pygame.Rect (player.current_loc.x, player.current_loc.y, 8, 8))
+
+
     def update_matrix(self):
         for x in range (0, self.width):
             for y in range (0, self.height):
@@ -61,13 +65,14 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 10
+    MAX_OF_ROOMS = 7
 
     def __init__(self, height, width):
         self.height = height
         self.width = width
         self.maze = maze (width, height)
         self.rooms = []
+        self.player_one = self.player_two = None
 
     def init_room(self, room_counter):
         x_coordinate = randint (0, self.width - 1)
@@ -106,10 +111,12 @@ class MazeGenerator:
         return is_valid_room
 
     def init_tunnles(self):
+        has_tunnel_connection = []
         for room_src in self.rooms:
             for room_trg in self.rooms:
-                if room_src != room_trg:
-                    self.init_tunnel (room_src, room_trg)
+                if room_src != room_trg and (room_src.id,room_trg.id) not in has_tunnel_connection:
+                    has_tunnel_connection.extend(((room_src.id,room_trg.id),(room_trg.id,room_src.id)))
+                    self.init_tunnel(room_src, room_trg)
 
     def init_tunnel(self, room_source, room_target):
         if room_source.center < room_target.center:
@@ -121,7 +128,19 @@ class MazeGenerator:
 
     def init_addons(self):
         for room in self.rooms:
-            room.set_room_addons (self.maze)
+            room.set_room_addons(self.maze)
+
+    def init_players(self):
+        start_room_p1 = randint(0,len(self.rooms))
+        start_room_p2 = randint(0,len(self.rooms))
+        if start_room_p1 == start_room_p2:
+            self.init_players()
+        else:
+            self.player_one = Player(self.rooms[start_room_p1].center,(154,205,50))
+            self.player_two = Player(self.rooms[start_room_p2].center,(255,140,0))
+
+        self.maze.draw_players(self.player_one)
+        self.maze.draw_players(self.player_two)
 
     def start_game(self):
         done = False
@@ -138,6 +157,7 @@ class MazeGenerator:
                 room_counter += 1
         self.init_tunnles ()
         self.init_addons ()
+        self.init_players()
         pygame.display.flip ()
         self.maze.update_matrix ()
 
