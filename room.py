@@ -25,3 +25,11 @@ class Room:
         return abs (self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs (self.center.y -
                                                                                                   other.center.y) < (
                            self.height + other.height) / 2 + 5
+
+    @height.setter
+    def height(self,new_height):
+        self._height=new_height
+
+    @width.setter
+    def width(self,new_width):
+        self._width=new_width

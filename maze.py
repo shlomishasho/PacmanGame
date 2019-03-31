@@ -14,12 +14,12 @@ class maze:
         self.maze_matrix = self.init_maze_matrix ()
 
     def init_maze_matrix(self):
-        return [Point (x, y) for y in range (self.width + 1) for x in range (self.height + 1)]
+        return [[Point (x, y) for y in range (self.width)] for x in range (self.height)]
 
     def draw_room(self, left, top, color, room):
         pygame.draw.rect (self.screen, color, pygame.Rect (left, top, room.width, room.height))
-        for y in range (int(top), int(top + room.height)):
-            for x in range (int(left), int(left + room.width)):
+        for y in range (top, top + room.height):
+            for x in range (left, left + room.width):
                 self.maze_matrix[x][y] = RoomPoint (x, y, room.id)
 
 
@@ -31,7 +31,6 @@ class MazeGenerator:
         self.height = height
         self.width = width
         pygame.init ()
-        self.screen = pygame.display.set_mode ((self.height, self.width))
         self.maze = maze (width, height)
         self.rooms = []
         self.setup_maze ()
@@ -44,35 +43,30 @@ class MazeGenerator:
         width_length = randint (50, 74)
         height_lenght = randint (50, 80)
 
-        new_room = Room (Point (int(x_coordinate), int(y_coordinate)), int(width_length), int(height_lenght))
+        new_room = Room (Point (x_coordinate, y_coordinate), width_length, height_lenght)
 
-        top = new_room.center.y - new_room.height / 2
-        if top < 0:
-            top = 0
-        bottom = new_room.center.y + new_room.height / 2
+        top = max(int (new_room.center.y - new_room.height / 2),0)
+        bottom = int (new_room.center.y + new_room.height / 2)
         if bottom >= self.height:
             bottom = self.height - 1
-        left = new_room.center.x - new_room.width / 2
-        if left < 0:
-            left = 0
-        right = new_room.center.x + new_room.width / 2
+            new_room.height = bottom - top
+
+        left = max(int (new_room.center.x - new_room.width / 2),0)
+        right = int (new_room.center.x + new_room.width / 2)
         if right >= self.width:
             right = self.width - 1
+            new_room.width = right - left
 
         is_valid_room = True
-        print (room_counter)
         for i in range (room_counter):
-            if self.rooms[i].is_overlap (new_room):
+            if self.rooms[i].is_overlap(new_room):
                 print ('try another loc.')
                 is_valid_room = False
 
         if is_valid_room:
-            """TODO : enter to maze points"""
             self.rooms.append (new_room)
-            self.maze.draw_room (left, top,self.WHITE,new_room)
-            return True
-        else:
-            return False
+            self.maze.draw_room (left, top, self.WHITE, new_room)
+        return is_valid_room
 
     def setup_maze(self):
 
