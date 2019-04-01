@@ -1,6 +1,7 @@
 from math import sqrt
 from random import randint
 
+
 class Player():
     START_HEALTH_POINTS = 10
     START_AMMO_POINTS = 6
@@ -67,18 +68,17 @@ class Player():
         ----> finish the game """
 
     @staticmethod
-    def get_start_positions_for_players(self, rooms,number_of_players):
-        setteled_players=0
-        locations=tuple()
+    def get_start_positions_for_players(self, rooms, number_of_players):
+        setteled_players = 0
+        locations = []
         while setteled_players < number_of_players:
-            new_location=randint(0,len(rooms))
+            new_location = randint(0, len(rooms))
             if new_location not in locations:
-                setteled_players+=1
-                locations+=(new_location,)
+                setteled_players += 1
+                locations.append(new_location)
 
         return locations
 
-
     @staticmethod
     def generate_color_for_player(player_number):
-        return (randint(player_number,255-player_number),)*3
+        return (randint(player_number, 255 - player_number),) * 3
