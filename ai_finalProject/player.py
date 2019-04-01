@@ -66,5 +66,19 @@ class Player():
         """call to function that check if one of the players health points is less or equal to zero
         ----> finish the game """
 
-    def get_start_position(self, rooms):
-        return randint(o,len(rooms))
+    @staticmethod
+    def get_start_positions_for_players(self, rooms,number_of_players):
+        setteled_players=0
+        locations=tuple()
+        while setteled_players < number_of_players:
+            new_location=randint(0,len(rooms))
+            if new_location not in locations:
+                setteled_players+=1
+                locations+=(new_location,)
+
+        return locations
+
+
+    @staticmethod
+    def generate_color_for_player(player_number):
+        return (randint(player_number,255-player_number),)*3

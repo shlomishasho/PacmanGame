@@ -39,6 +39,7 @@ class maze:
 
     def draw_player(self, player):
         pygame.draw.rect (self.screen, player.color, pygame.Rect (player.current_loc.x, player.current_loc.y, 8, 8))
+        "TODO: update on matrix maze also "
 
 
     def update_matrix(self):
@@ -67,12 +68,19 @@ class MazeGenerator:
     WHITE = (255, 255, 255)
     MAX_OF_ROOMS = 7
 
-    def __init__(self, height, width):
+    def __init__(self, height, width,number_of_players):
         self.height = height
         self.width = width
         self.maze = maze (width, height)
         self.rooms = []
-        self.player_one = self.player_two = None
+        self.players=[]
+        self.number_of_players=number_of_players
+
+    def init_rooms(self):
+        room_counter = 0
+        while room_counter < self.MAX_OF_ROOMS:
+            if self.init_room (room_counter):
+                room_counter += 1
 
     def init_room(self, room_counter):
         x_coordinate = randint (0, self.width - 1)
@@ -131,16 +139,12 @@ class MazeGenerator:
             room.set_room_addons(self.maze)
 
     def init_players(self,number_of_players):
-        start_room_p1 = randint(0,len(self.rooms))
-        start_room_p2 = randint(0,len(self.rooms))
-        if start_room_p1 == start_room_p2:
-            self.init_players()
-        else:
-            self.player_one = Player(self.rooms[start_room_p1].center,(154,205,50))
-            self.player_two = Player(self.rooms[start_room_p2].center,(255,140,0))
-
-        self.maze.draw_player(self.player_one)
-        self.maze.draw_player(self.player_two)
+        locations=Player.get_start_positions_for_players(len(self.rooms),number_of_players)
+        for new_player_num in range(0,number_of_players):
+            room_for_player=locations[new_player_num]
+            new_color=Player.generate_color_for_player(new_player_num)
+            self.players[new_player_num]=Player(room_for_player.center,new_color)
+            self.maze.draw_player(self.players[new_player_num])
 
     def start_game(self):
         done = False
@@ -150,18 +154,16 @@ class MazeGenerator:
                 if event.type == pygame.QUIT:
                     pygame.quit ()
 
-    def setup_maze(self):
-        room_counter = 0
-        while room_counter < self.MAX_OF_ROOMS:
-            if self.init_room (room_counter):
-                room_counter += 1
+    def setup_maze(self,):
+        self.init_rooms()
         self.init_tunnles ()
         self.init_addons ()
-        self.init_players()
+        self.init_players(self.number_of_players)
         pygame.display.flip ()
+
         self.maze.update_matrix ()
 
 
 if __name__ == '__main__':
-    m = MazeGenerator (600, 600)
+    m = MazeGenerator (600, 600,2)
     m.start_game ()
