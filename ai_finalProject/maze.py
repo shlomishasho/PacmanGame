@@ -3,7 +3,7 @@ import numpy
 from random import randint
 
 from point import Point, RoomPoint, PointStatus, RoomStatus
-from room import Room, Coordinates
+from Room import Room, Coordinates
 from player import Player
 
 class maze:
@@ -37,7 +37,7 @@ class maze:
     def draw_line(self, src_point, target_point, color):
         pygame.draw.line (self.screen, color, (src_point.x, src_point.y), (target_point.x, target_point.y), 2)
 
-    def draw_players(self,player):
+    def draw_player(self, player):
         pygame.draw.rect (self.screen, player.color, pygame.Rect (player.current_loc.x, player.current_loc.y, 8, 8))
 
 
@@ -54,7 +54,7 @@ class maze:
                         if isinstance (self.maze_matrix[x][y], RoomPoint):
                             for room_color in RoomStatus.get_colors ():
                                 if self.is_same_color (color, room_color):
-                                    self.maze_matrix[x][y]._status_in_room = color
+                                    self.maze_matrix[x][y].status_in_room = color
 
     def is_same_color(self, color1, color2):
         for i in range (0, len (color2)):
@@ -83,7 +83,7 @@ class MazeGenerator:
 
         self.maze.maze_matrix[x_coordinate][y_coordinate] = RoomPoint (x_coordinate, y_coordinate)
         new_room = Room (self.maze.maze_matrix[x_coordinate][y_coordinate], width_length, height_lenght)
-        self.maze.maze_matrix[x_coordinate][y_coordinate].set_id (new_room.id)
+        self.maze.maze_matrix[x_coordinate][y_coordinate].room_id=new_room.id
 
         top = max (int (new_room.center.y - new_room.height / 2), 0)
         bottom = int (new_room.center.y + new_room.height / 2)
@@ -130,7 +130,7 @@ class MazeGenerator:
         for room in self.rooms:
             room.set_room_addons(self.maze)
 
-    def init_players(self):
+    def init_players(self,number_of_players):
         start_room_p1 = randint(0,len(self.rooms))
         start_room_p2 = randint(0,len(self.rooms))
         if start_room_p1 == start_room_p2:
@@ -139,8 +139,8 @@ class MazeGenerator:
             self.player_one = Player(self.rooms[start_room_p1].center,(154,205,50))
             self.player_two = Player(self.rooms[start_room_p2].center,(255,140,0))
 
-        self.maze.draw_players(self.player_one)
-        self.maze.draw_players(self.player_two)
+        self.maze.draw_player(self.player_one)
+        self.maze.draw_player(self.player_two)
 
     def start_game(self):
         done = False

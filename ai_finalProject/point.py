@@ -1,7 +1,5 @@
-from enum import Enum
-
-
-class PointStatus ():
+class PointStatus():
+    """TODO: need to initiialize by number of players"""
     WALL = (0, 0, 0)
     SPACE = (255, 255, 255)
     PLAYER = ('some colors for Player')
@@ -11,7 +9,7 @@ class PointStatus ():
         return [cls.WALL, cls.SPACE, cls.PLAYER]
 
 
-class RoomStatus ():
+class RoomStatus():
     HEALTH = (220, 20, 60)
     AMMO = (72, 61, 139)
     NONE = (255, 255, 255)
@@ -44,9 +42,9 @@ class Point:
         self._status = new_status
 
 
-class RoomPoint (Point):
+class RoomPoint(Point):
     def __init__(self, x, y, room_id=None, status_in_room=RoomStatus.NONE):
-        super ().__init__ (x, y, PointStatus.SPACE)
+        super().__init__(x, y, PointStatus.SPACE)
         self._status_in_room = status_in_room
         self._room_id = room_id
 
@@ -58,7 +56,12 @@ class RoomPoint (Point):
     def status_in_room(self, new_status):
         self._status_in_room = new_status
 
-    def set_id(self, new_id):
+    @property
+    def room_id(self):
+        return self._room_id
+
+    @room_id.setter
+    def room_id(self, new_id):
         self._room_id = new_id
 
     def __lt__(self, other):
