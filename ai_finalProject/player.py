@@ -68,11 +68,11 @@ class Player():
         ----> finish the game """
 
     @staticmethod
-    def get_start_positions_for_players(self, rooms, number_of_players):
+    def get_start_positions_for_players(number_of_rooms, number_of_players):
         setteled_players = 0
         locations = []
         while setteled_players < number_of_players:
-            new_location = randint(0, len(rooms))
+            new_location = randint(0, number_of_rooms)
             if new_location not in locations:
                 setteled_players += 1
                 locations.append(new_location)

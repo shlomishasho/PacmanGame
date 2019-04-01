@@ -1,7 +1,7 @@
 import itertools
 from collections import namedtuple
 from random import randint
-from addon import Addon
+from ai_finalProject.Room.addon import Addon
 
 Coordinates = namedtuple('Coordinates', 'left right top bottom')
 
@@ -67,7 +67,5 @@ class Room:
         x_location = max(self.coordinates.left, (x_location - width))
         y_location = max(self.coordinates.top, (y_location - height))
         new_addon.location = (x_location, y_location)
-        new_addon.width = width
-        new_addon.height = height
         maze.draw_addons(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
         return new_addon

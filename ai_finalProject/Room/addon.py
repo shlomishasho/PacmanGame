@@ -22,11 +22,11 @@ class Addon():
         return self._height
 
     @width.setter
-    def location(self, new_width):
+    def width(self, new_width):
         self._width = new_width
 
-    @_height.setter
-    def location(self, new_height):
+    @height.setter
+    def height(self, new_height):
         self._height = new_height
 
     def get_dimensions(self):

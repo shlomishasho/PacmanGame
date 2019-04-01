@@ -2,9 +2,9 @@ import pygame
 import numpy
 from random import randint
 
-from point import Point, RoomPoint, PointStatus, RoomStatus
-from Room import Room, Coordinates
-from player import Player
+from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
+from ai_finalProject.Room.room import Room, Coordinates
+from ai_finalProject.player import Player
 
 class maze:
     def __init__(self, width, height):
@@ -141,9 +141,9 @@ class MazeGenerator:
     def init_players(self,number_of_players):
         locations=Player.get_start_positions_for_players(len(self.rooms),number_of_players)
         for new_player_num in range(0,number_of_players):
-            room_for_player=locations[new_player_num]
+            room_for_player=self.rooms[locations[new_player_num]]
             new_color=Player.generate_color_for_player(new_player_num)
-            self.players[new_player_num]=Player(room_for_player.center,new_color)
+            self.players.append(Player(room_for_player.center,new_color))
             self.maze.draw_player(self.players[new_player_num])
 
     def start_game(self):
