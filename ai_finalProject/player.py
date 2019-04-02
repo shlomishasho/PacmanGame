@@ -12,7 +12,7 @@ class Player():
         self._health_points = self.START_HEALTH_POINTS
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
-        self.size=(8,8)
+        self.size = (8, 8)
         pass
 
     @property
@@ -68,9 +68,10 @@ class Player():
         """call to function that check if one of the players health points is less or equal to zero
         ----> finish the game """
 
-    def move(self, new_location):
-        last_location = self.current_loc
-
+    def move(self, maze, new_location):
+        maze.update_player(self)
+        self.current_loc = new_location
+        maze.update_player(self, self.color)
 
     @staticmethod
     def get_start_positions_for_players(number_of_rooms, number_of_players):
