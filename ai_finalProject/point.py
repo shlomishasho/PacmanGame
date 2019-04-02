@@ -2,8 +2,7 @@ class PointStatus():
     """TODO: need to initiialize by number of players"""
     WALL = (0, 0, 0)
     SPACE = (255, 255, 255)
-    PLAYERS = [(10, 10, 10),(50,50,50)]
-
+    PLAYERS = [(10, 10, 10), (50, 50, 50)]
 
     @classmethod
     def get_colors(cls):
@@ -43,6 +42,9 @@ class Point:
     @status.setter
     def status(self, new_status):
         self._status = new_status
+
+    def get_location_as_tuple(self):
+        return self.x, self.y,
 
 
 class RoomPoint(Point):

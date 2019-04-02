@@ -70,14 +70,12 @@ class maze:
     def draw_player(self, player):
         pygame.draw.rect(self.screen, player.color,
                          pygame.Rect(player.current_loc.x, player.current_loc.y, *player.size))
-        self.update_element_on_matrix(player.current_loc, player.size, player.color)
+        self.update_element_on_matrix(player.current_loc.get_location_as_tuple(), player.size, player.color)
 
     def update_element_on_matrix(self, location, size, new_status):
         for x in range(location[0], location[0] + size[0]):
             for y in range(location[1], location[1] + size[1]):
                 self.maze_matrix[x][y].status = new_status
-
-
 
 
 class MazeGenerator:
