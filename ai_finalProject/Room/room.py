@@ -16,8 +16,8 @@ class Room:
         self._width = width
         self._height = height
         self._center = center_point
-        self.ammo = 0
-        self.health = 0
+        self.ammo = []
+        self.health = []
         self.coordinates = None
 
     @property
