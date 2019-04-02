@@ -12,6 +12,7 @@ class Player():
         self._health_points = self.START_HEALTH_POINTS
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
+        self.size=(8,8)
         pass
 
     @property
@@ -67,12 +68,16 @@ class Player():
         """call to function that check if one of the players health points is less or equal to zero
         ----> finish the game """
 
+    def move(self, new_location):
+        last_location = self.current_loc
+
+
     @staticmethod
     def get_start_positions_for_players(number_of_rooms, number_of_players):
         setteled_players = 0
         locations = []
         while setteled_players < number_of_players:
-            new_location = randint(0, number_of_rooms-1)
+            new_location = randint(0, number_of_rooms - 1)
             if new_location not in locations:
                 setteled_players += 1
                 locations.append(new_location)

@@ -2,24 +2,27 @@ class PointStatus():
     """TODO: need to initiialize by number of players"""
     WALL = (0, 0, 0)
     SPACE = (255, 255, 255)
-    PLAYER = ('some colors for Player')
+    PLAYERS = [(10, 10, 10),(50,50,50)]
+
 
     @classmethod
     def get_colors(cls):
-        return [cls.WALL, cls.SPACE, cls.PLAYER]
+        return [cls.WALL, cls.SPACE, *cls.PLAYERS]
 
 
-class RoomStatus():
+class RoomStatus(PointStatus):
     HEALTH = (220, 20, 60)
     AMMO = (72, 61, 139)
-    NONE = (255, 255, 255)
 
     @classmethod
     def get_colors(cls):
-        return [cls.HEALTH, cls.AMMO, cls.NONE]
+        point_color_list = super().get_colors()
+        point_color_list.extend([cls.HEALTH, cls.AMMO])
+        return point_color_list
 
 
 class Point:
+
     def __init__(self, x, y, status=PointStatus.WALL):
         self._x = x
         self._y = y
@@ -43,18 +46,9 @@ class Point:
 
 
 class RoomPoint(Point):
-    def __init__(self, x, y, room_id=None, status_in_room=RoomStatus.NONE):
-        super().__init__(x, y, PointStatus.SPACE)
-        self._status_in_room = status_in_room
+    def __init__(self, x, y, room_id=None, status=PointStatus.SPACE):
+        super().__init__(x, y, status)
         self._room_id = room_id
-
-    @property
-    def status_in_room(self):
-        return self._status_in_room
-
-    @status_in_room.setter
-    def status_in_room(self, new_status):
-        self._status_in_room = new_status
 
     @property
     def room_id(self):

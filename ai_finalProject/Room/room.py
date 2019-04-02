@@ -32,11 +32,6 @@ class Room:
     def center(self):
         return self._center
 
-    def is_overlap(self, other):
-        return abs(self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs(self.center.y -
-                                                                                                other.center.y) < (
-                       self.height + other.height) / 2 + 5
-
     @height.setter
     def height(self, new_height):
         self._height = new_height
@@ -44,6 +39,13 @@ class Room:
     @width.setter
     def width(self, new_width):
         self._width = new_width
+
+    def is_overlap(self, other):
+        return abs(self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs(self.center.y -
+                                                                                                other.center.y) < (
+                       self.height + other.height) / 2 + 5
+
+
 
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
@@ -67,5 +69,5 @@ class Room:
         x_location = max(self.coordinates.left, (x_location - width))
         y_location = max(self.coordinates.top, (y_location - height))
         new_addon.location = (x_location, y_location)
-        maze.draw_addons(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
+        maze.draw_addon(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
         return new_addon
