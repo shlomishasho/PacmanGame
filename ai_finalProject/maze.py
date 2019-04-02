@@ -4,6 +4,7 @@ from random import randint
 from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
 from ai_finalProject.Room.room import Room, Coordinates
 from ai_finalProject.Player.player import Player
+from ai_finalProject.Player.modes_util import do_health,do_ammo
 
 
 class maze:
@@ -128,9 +129,11 @@ class MazeGenerator:
         new_room.set_coordinates(Coordinates(left, right, top, bottom))
         if is_valid_room:
             self.rooms.append(new_room)
+            new_room.set_id()
             self.maze.draw_room(self.WHITE, new_room)
 
         return is_valid_room
+
 
     def init_tunnles(self):
         has_tunnel_connection = []
@@ -157,7 +160,8 @@ class MazeGenerator:
         for new_player_num in range(0, number_of_players):
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player(new_player_num)
-            self.players.append(Player(room_for_player.center, new_color))
+            """here do random to pass player mode name function """
+            self.players.append(Player(room_for_player.center, new_color,do_health))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player(self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
 
@@ -174,7 +178,8 @@ class MazeGenerator:
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
                 for now i'm just checking the astar func"""
-                player.step(self.maze,self.rooms)
+                # player.step(self.maze,self.rooms)
+                player.f(player,self.maze,self.rooms)
                 pygame.display.flip()
 
     def setup_maze(self, ):

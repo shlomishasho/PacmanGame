@@ -1,22 +1,23 @@
 from math import sqrt
 from random import randint
-from ai_finalProject.Player.modes_util import calculate_route,euclidean_distance,check_condition,poststep
 
 
 class Player():
     START_HEALTH_POINTS = 100
     START_AMMO_POINTS = 100
 
-    def __init__(self, start_point, color):
+    def __init__(self, start_point, color,f):
         self._current_loc = start_point
         """have to change that"""
         self._play_mode = 'health'
+        self.f = f
         self._health_points = self.START_HEALTH_POINTS
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
         self.size = (8, 8)
         self.counter = 5
-        self._path = [None]
+        self._path = ['TARGET','-']
+        self.goal = None
         pass
 
     @property
@@ -33,7 +34,7 @@ class Player():
 
     @property
     def play_mode(self):
-        return self._play_mode
+        return self._play_mode(self)
 
     @play_mode.setter
     def play_mode(self, new_play_mode):
@@ -101,35 +102,3 @@ class Player():
     def generate_color_for_player(player_number):
         return (randint(player_number, 255 - player_number),) * 3
 
-    def step(self,maze,rooms):
-            if check_condition(self):
-                poststep(self, maze)
-                self._path = []
-                self._path = calculate_route(self,maze,rooms)
-                self.counter = 5
-
-            self.do_step(maze)
-            print(self.current_loc.x)
-
-
-    def do_step(self,maze):
-        # for point in self.path:
-        #     yield point
-        self.move(maze, self.path[0])
-        del self.path[0]
-        pass
-
-    def get_most_close_room(self, rooms):
-        rooms_distance = {}
-        distance = 0
-        for room in rooms:
-            distance = euclidean_distance(room.center, self.current_loc)
-            rooms_distance[room.id] = distance
-
-        sorted_rooms_by_distance = sorted(rooms_distance.items(), key=lambda kv: kv[1])
-
-        for id, dis in sorted_rooms_by_distance:
-            if len(rooms[id].health) > 0:
-                return id
-
-        return -1

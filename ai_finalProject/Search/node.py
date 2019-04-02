@@ -20,4 +20,6 @@ class Node:
         return sqrt(pow(self.cur_point.x - self.target.x, 2) + pow(self.cur_point.y - self.target.y, 2))
 
     def __lt__(self, other):
-        return self.f_value < other.f_value
+        if not isinstance(other,str):
+            return self.f_value < other.f_value
+        return False

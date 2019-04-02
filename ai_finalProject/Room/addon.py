@@ -1,9 +1,18 @@
 class Addon():
-    def __init__(self, addon_type, location_cor=None):
+    def __init__(self, addon_type, room_id,location_cor=None):
         self._type = addon_type
         self._loc_coordinate = location_cor
         self._width = 10
         self._height = 10
+        self._room_id = room_id
+
+    @property
+    def room_id(self):
+        return self._lroom_id
+
+    @room_id.setter
+    def room_id(self, new_room_id):
+        self._room_id = new_room_id
 
     @property
     def location(self):

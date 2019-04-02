@@ -12,17 +12,23 @@ class Room:
     HEALTH = (220, 20, 60)
 
     def __init__(self, center_point, width, height, ):
-        self.id = next(self.newid)
+        self.id = -1
         self._width = width
         self._height = height
         self._center = center_point
-        self.ammo = []
+        self._ammo = []
         self._health = []
         self.coordinates = None
 
+    def set_id(self):
+        self.id = next(self.newid)
     @property
     def health(self):
         return self._health
+
+    @property
+    def ammo(self):
+        return self._ammo
 
     @property
     def height(self):
@@ -48,11 +54,16 @@ class Room:
     def health(self, new_health):
         self._health = new_health
 
+    @ammo.setter
+    def ammo(self, new_ammo):
+        self._ammo = new_ammo
+
+
+
     def is_overlap(self, other):
         return abs(self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs(self.center.y -
                                                                                                 other.center.y) < (
                        self.height + other.height) / 2 + 5
-
 
 
     def set_coordinates(self, coordinates):
@@ -60,7 +71,7 @@ class Room:
 
     def set_room_addons(self, maze):
         ammo_amount = randint(0, 3)
-        self.ammo = self.health = []
+        self._ammo = self._health = []
         health_amount = randint(0, 3)
 
         for i in range(0, ammo_amount):
@@ -69,7 +80,7 @@ class Room:
             self.health.append(self._set_room_addon(maze, self.HEALTH))
 
     def _set_room_addon(self, maze, color):
-        new_addon = Addon(color)
+        new_addon = Addon(color,self.id)
         x_location = randint(self.coordinates.left, self.coordinates.right)
         y_location = randint(self.coordinates.top, self.coordinates.bottom)
         width = max(new_addon.width + x_location, self.coordinates.right) - x_location

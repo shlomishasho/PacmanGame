@@ -1,10 +1,19 @@
 from ai_finalProject.Search.priorityQueue import *
 from ai_finalProject.Search.node import *
-from ai_finalProject.point import RoomPoint
+from ai_finalProject.point import RoomPoint,RoomStatus
 from heapq import *
 
 from math import sqrt
-
+#
+# things that we have to do :
+#     1. take care of removing the addon from the list in the rooms
+#     2. generate play mode each few time .
+#     3. attack,defence functions
+#     4. what about one player get the target of the other one? we have to give him another target
+#     5. if we have a time - gather ammo,health functions
+#     6. change the colors of the players, we dont want space color
+#     7. one to 100 runs there is an execption of out of range,
+#     8. change place of a_star and euclidean
 
 def a_star(maze, player, goal):
     start = player.current_loc
@@ -22,57 +31,82 @@ def a_star(maze, player, goal):
         current_point = temp_node.get_point()
         path.insert(len(path), current_point)
         if current_point == target:
-            path.insert(len(path), None)
+            path.insert(len(path), 'TARGET')
             return path
         else:
             for i, j in neighbors:
-                new_node = Node(maze[current_point.x + i][current_point.y + j], target)
-                if ((current_point.x + i), (current_point.y + j)) not in visited:
-                    visited.append((current_point.x + i, current_point.y + j))
-                    heappush(queue, new_node)
+                if maze[current_point.x + i][current_point.y + j].status != RoomStatus.WALL:
+                    new_node = Node(maze[current_point.x + i][current_point.y + j], target)
+                    if ((current_point.x + i), (current_point.y + j)) not in visited:
+                        visited.append((current_point.x + i, current_point.y + j))
+                        heappush(queue, new_node)
 
     print('queue is empty')
 
 
-# euclidean distance function
 def euclidean_distance(a, b):
     return sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 
 
-def check_condition(player):
-    return player.path[0] is None if player.play_mode == 'health' or player.play_mode == 'ammo' else player.path[
-                                                                                                         0] == None or player.counter == 0
+def health_loc(room):
+    if len(room.health) > 0:
+        return (room.id,room.health[0].location)
+    return False
 
 
-def post_health_step(player, maze):
-    player.health_points = min(player.health_points + 10, 100)
-    maze.remove_addon([10, 10], player.path[len(player.path) - 1])
+def ammo_loc(room):
+    if len(room.ammo) > 0:
+        return room.ammo[0].location
+    return False
 
 
-def prestep(player, maze, rooms, get_target):
-    closest_room = get_target(rooms)
-    return a_star(maze, player, rooms[closest_room].health[0].location)
+def find_closest_room(player_loc, rooms,f):
+
+    id_center = list(map(lambda r:(euclidean_distance(r.center,player_loc),r.id),rooms))
+    sorted_rooms = sorted(id_center,key=lambda k: k[0])
+    for dis,id  in sorted_rooms:
+        room = rooms[int(id)]
+        loc = f(room)
+        if loc:
+            return loc
+
+    print('no left health points')
+    return None
 
 
-def poststep(player, maze):
-    """maybe will change like pre step that send fucntion"""
-    if player.path[0] != None:
-        modes = {
-            'health': post_health_step(player, maze)
-        }
-        modes[player.play_mode]
+def clean_and_stepforward(player,maze):
+    player.move(maze, player.path[0])
+    del player.path[0]
 
 
-def get_enemy_target():
-    pass
+def do_health(player,maze,rooms):
+
+    if isinstance(player.path[1], str) and isinstance(player.path[0], str):
+        """happen only in the start"""
+        (room_id_target, target) = find_closest_room(player.current_loc, rooms, health_loc)
+        player.path = a_star(maze.maze_matrix,player,target)
+    elif isinstance(player.path[1], str):
+        player.health_points = min(player.health_points + 10, 100)
+        maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
+        """have to delete from list in rooms"""
+        (room_id_target,target) = find_closest_room(player.current_loc,rooms,health_loc)
+        player.path = a_star(maze.maze_matrix,player,target)
+
+    clean_and_stepforward(player,maze)
 
 
-def calculate_route(player, maze, rooms):
-    modes = {
-        'health': prestep(player, maze.maze_matrix, rooms, player.get_most_close_room)
-        # 'attack':  prestep(player,maze.maze_matrix,rooms,get_enemy_target),
-        # 'ammo':  prestep(player,maze.maze_matrix,rooms,get_enemy_target),
-        # 'defence':  prestep(player,maze.maze_matrix, rooms,get_enemy_target)
-    }
+def do_ammo(player,maze,rooms):
 
-    return modes[player.play_mode]
+    if isinstance(player.path[1], str) and isinstance(player.path[0], str):
+        """happen only in the start"""
+        (room_id_target, target) = find_closest_room(player.current_loc, rooms, ammo_loc)
+        player.path = a_star(maze.maze_matrix,player,target)
+    elif isinstance(player.path[1], str):
+        player.ammo_points = min(player.ammo_points + 10, 100)
+        maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
+        """have to delete from list in rooms"""
+        (room_id_target,target) = find_closest_room(player.current_loc,rooms,ammo_loc)
+        player.path = a_star(maze.maze_matrix,player,target)
+
+    clean_and_stepforward(player,maze)
+
