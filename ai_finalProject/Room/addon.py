@@ -7,7 +7,7 @@ class Addon():
 
     @property
     def location(self):
-        return self.location
+        return self._loc_coordinate
 
     @location.setter
     def location(self, new_loc):

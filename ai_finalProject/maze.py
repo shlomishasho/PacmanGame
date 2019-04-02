@@ -1,9 +1,10 @@
 import pygame
+import numpy
 from random import randint
 
 from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
 from ai_finalProject.Room.room import Room, Coordinates
-from ai_finalProject.player import Player
+from ai_finalProject.Player.player import Player
 
 
 class maze:
@@ -19,6 +20,9 @@ class maze:
     # Region functions for init the Maze
     def init_maze_matrix(self):
         return [[Point(x, y) for y in range(self.width)] for x in range(self.height)]
+
+    def draw_addons(self, color, size, location):
+        pygame.draw.rect (self.screen, color, pygame.Rect (location[0], location[1], size[0], size[1]))
 
     def draw_room(self, color, room):
         pygame.draw.rect(self.screen, color,
@@ -36,9 +40,6 @@ class maze:
 
     def draw_line(self, src_point, target_point, color, width=2):
         pygame.draw.line(self.screen, color, (src_point.x, src_point.y), (target_point.x, target_point.y), width)
-
-    def draw_addon(self, color, size, location):
-        pygame.draw.rect(self.screen, color, pygame.Rect(location[0], location[1], size[0], size[1]))
 
     def update_matrix_after_init(self):
         for x in range(0, self.width):
@@ -80,7 +81,7 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 7
+    MAX_OF_ROOMS = 3
 
     def __init__(self, height, width, number_of_players):
         self.height = height
@@ -120,9 +121,9 @@ class MazeGenerator:
             new_room.width = right - left
 
         is_valid_room = True
-        for i in range(room_counter):
-            if self.rooms[i].is_overlap(new_room):
-                print('try another loc.')
+        for i in range (room_counter):
+            if self.rooms[i].is_overlap (new_room):
+                print ('is_overlap , try another loc.')
                 is_valid_room = False
 
         new_room.set_coordinates(Coordinates(left, right, top, bottom))
@@ -136,8 +137,8 @@ class MazeGenerator:
         has_tunnel_connection = []
         for room_src in self.rooms:
             for room_trg in self.rooms:
-                if room_src != room_trg and (room_src.id, room_trg.id) not in has_tunnel_connection:
-                    has_tunnel_connection.extend(((room_src.id, room_trg.id), (room_trg.id, room_src.id)))
+                if room_src != room_trg and (room_src.id,room_trg.id) not in has_tunnel_connection:
+                    has_tunnel_connection.extend(((room_src.id,room_trg.id),(room_trg.id,room_src.id)))
                     self.init_tunnel(room_src, room_trg)
 
     def init_tunnel(self, room_source, room_target):
@@ -167,6 +168,12 @@ class MazeGenerator:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
+            for player in self.players:
+                """here we will discuss in the order of the modes of each player, how to do it,
+                for now i'm just checking the astar func"""
+                player.search(self.maze,self.rooms)
+                pygame.display.flip()
 
     def setup_maze(self, ):
         self.init_rooms()

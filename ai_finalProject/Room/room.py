@@ -17,8 +17,12 @@ class Room:
         self._height = height
         self._center = center_point
         self.ammo = []
-        self.health = []
+        self._health = []
         self.coordinates = None
+
+    @property
+    def health(self):
+        return self._health
 
     @property
     def height(self):
@@ -39,6 +43,10 @@ class Room:
     @width.setter
     def width(self, new_width):
         self._width = new_width
+
+    @health.setter
+    def health(self, new_health):
+        self._health = new_health
 
     def is_overlap(self, other):
         return abs(self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs(self.center.y -
@@ -69,5 +77,5 @@ class Room:
         x_location = max(self.coordinates.left, (x_location - width))
         y_location = max(self.coordinates.top, (y_location - height))
         new_addon.location = (x_location, y_location)
-        maze.draw_addon(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
+        maze.draw_addons(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
         return new_addon
