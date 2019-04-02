@@ -3,16 +3,16 @@ import heapq
 
 class PriorityQueue:
 
-    def _init(self):
+    def __init__(self):
         self.queue = []
 
-    def _qsize(self):
+    def qsize(self):
         return len(self.queue)
 
-    def _push(self, item, heappush=heapq.heappush):
+    def push(self, item, heappush=heapq.heappush):
         heappush(self.queue, item)
 
-    def _pop(self, heappop=heapq.nsmallest):
+    def pop(self, heappop=heapq.nsmallest):
         # nsmallest
         # heappop
         return heappop(self.queue)

@@ -12,10 +12,10 @@ def a_star(maze,player,target):
 
     new_node = Node(start,target)
     queue = PriorityQueue()
-    queue._push(new_node)
+    queue.push(new_node)
 
     while queue and not found:
-        temp_node = queue._pop()
+        temp_node = queue.pop()
         current_point = temp_node.get_point()
         player.move(current_point)
         maze.draw_player(player)
@@ -26,7 +26,7 @@ def a_star(maze,player,target):
                 new_node = Node(maze[current_point.x +i][current_point.y+j],target)
                 if ((current_point.x +i),(current_point.y+j)) not in visited:
                     visited.append((current_point.x +i),(current_point.y+j))
-                    queue._push(new_node)
+                    queue.push(new_node)
 
     if not found:
         print('problem .. the queue is empty and the target didnt found')

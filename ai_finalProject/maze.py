@@ -1,5 +1,4 @@
 import pygame
-import numpy
 from random import randint
 
 from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
@@ -81,7 +80,7 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 3
+    MAX_OF_ROOMS = 10
 
     def __init__(self, height, width, number_of_players):
         self.height = height
@@ -159,21 +158,20 @@ class MazeGenerator:
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player(new_player_num)
             self.players.append(Player(room_for_player.center, new_color))
-            self.maze.update_player(self.players[new_player_num])
+            self.maze.update_player(self.players[new_player_num],PointStatus.PLAYERS[new_player_num])
 
     def start_game(self):
-        done = False
         self.setup_maze()
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                pygame.display.flip()
+            pygame.display.flip()
 
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
                 for now i'm just checking the astar func"""
-                player.search(self.maze,self.rooms)
+                # player.search(self.maze,self.rooms)
                 pygame.display.flip()
 
     def setup_maze(self, ):
