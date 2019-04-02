@@ -15,6 +15,6 @@ class PriorityQueue:
     def _pop(self, heappop=heapq.nsmallest):
         # nsmallest
         # heappop
-        # return heappop(self.queue)
-        return heappop(1,self.queue,key= lambda node : node.f)
+        return heappop(self.queue)
+        # return heappop(1,self.queue,key= lambda node : node.f)
     # nsmalles

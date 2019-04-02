@@ -168,6 +168,7 @@ class MazeGenerator:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                pygame.display.flip()
 
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
