@@ -81,7 +81,7 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 3
+    MAX_OF_ROOMS = 10
 
     def __init__(self, height, width, number_of_players):
         self.height = height
@@ -170,7 +170,7 @@ class MazeGenerator:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                pygame.display.flip()
+            pygame.display.flip()
 
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
