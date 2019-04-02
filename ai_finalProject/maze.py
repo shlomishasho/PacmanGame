@@ -1,5 +1,4 @@
 import pygame
-import numpy
 from random import randint
 
 from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
