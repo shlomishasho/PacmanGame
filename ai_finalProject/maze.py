@@ -164,7 +164,7 @@ class MazeGenerator:
 
     def start_game(self):
         done = False
-        found = False
+        not_found = False
         self.setup_maze()
         while True:
             for event in pygame.event.get():
@@ -175,7 +175,7 @@ class MazeGenerator:
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
                 for now i'm just checking the astar func"""
-                found = player.step(self.maze,self.rooms,True) if not found else player.step(self.maze, self.rooms)
+                player.step(self.maze,self.rooms)
                 pygame.display.flip()
 
     def setup_maze(self, ):

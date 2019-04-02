@@ -64,4 +64,6 @@ class RoomPoint(Point):
         return self.x < other.x and self.y < other.y
 
     def __eq__(self, other):
+        if other == None:
+            print('none now')
         return self.x == other.x and self.y == other.y

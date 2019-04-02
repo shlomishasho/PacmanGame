@@ -35,42 +35,41 @@ def a_star(maze,player,goal):
     print('queue is empty')
 
 
-
 # euclidean distance function
 def euclidean_distance(a, b):
     return sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 
-def attack_step(**kwargs):
-    pass
+def check_condition(player):
+    return player.path[0] == None if player.play_mode == 'health' or player.play_mode == 'ammo' else player.path[0] == None or player.counter == 0
 
-def health_prestep(**kwargs):
-    """explenation:
-        - args:
-            by this order - maze,start point,player
-        1. get most close room id
-        1. get one of the health points in the room and marked her as a target
-        2. call to Astar to find the point
-        """
+def post_health_step(player,maze):
+    player.health_points = min(player.health_points + 10, 100)
+    maze.remove_addon([10,10],player.path[len(player.path) -1 ])
 
-    closest_room = kwargs['player'].get_most_close_room(kwargs['rooms'])
-    path = a_star(kwargs['maze'],kwargs['player'],kwargs['rooms'][closest_room].health[0].location)
-    return path
+def prestep(player,maze,rooms,get_target):
+
+    closest_room = get_target(rooms)
+    return a_star(maze,player,rooms[closest_room].health[0].location)
 
 
-def ammo_step(**kwargs):
-    pass
+def poststep(player,maze):
+    """maybe will change like pre step that send fucntion"""
+    if player.path[0] != None :
+        modes = {
+           'health': post_health_step(player, maze)
+        }
+        modes[player.play_mode]
 
-
-def defence_step(**kwargs):
+def get_enemy_target():
     pass
 
 
 def calculate_route(player,maze,rooms):
     modes = {
-        'health': health_prestep(player = player,maze = maze.maze_matrix, rooms =rooms)
-        # 'attack': attack_step(player,maze),
-        # 'ammo': ammo_step(player,maze),
-        # 'defence': defence_step(player,maze)
+        'health': prestep(player,maze.maze_matrix,rooms,player.get_most_close_room)
+        # 'attack':  prestep(player,maze.maze_matrix,rooms,get_enemy_target),
+        # 'ammo':  prestep(player,maze.maze_matrix,rooms,get_enemy_target),
+        # 'defence':  prestep(player,maze.maze_matrix, rooms,get_enemy_target)
     }
 
     return modes[player.play_mode]

@@ -1,6 +1,6 @@
 from math import sqrt
 from random import randint
-from ai_finalProject.Player.modes_util import calculate_route,euclidean_distance
+from ai_finalProject.Player.modes_util import calculate_route,euclidean_distance,check_condition,poststep
 
 
 class Player():
@@ -9,13 +9,19 @@ class Player():
 
     def __init__(self, start_point, color):
         self._current_loc = start_point
-        self._play_modes = ['health','attack', 'ammo', 'defense']
+        """have to change that"""
+        self._play_mode = 'health'
         self._health_points = self.START_HEALTH_POINTS
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
         self.size = (8, 8)
-        self.path = []
+        self.counter = 5
+        self._path = [None]
         pass
+
+    @property
+    def path(self):
+        return self._path
 
     @property
     def current_loc(self):
@@ -48,6 +54,10 @@ class Player():
     @ammo_points.setter
     def ammo_points(self, new_ammo_status):
         self._ammo_points = new_ammo_status
+
+    @path.setter
+    def path(self, new_path):
+        self._path = new_path
 
     @property
     def color(self):
@@ -91,16 +101,23 @@ class Player():
     def generate_color_for_player(player_number):
         return (randint(player_number, 255 - player_number),) * 3
 
-    def step(self,maze,rooms,is_new_target = False):
-        if is_new_target:
-            self.path = calculate_route(self,maze,rooms)
-            return False
-        else :
-            self.move(maze,self.path[0])
-            del self.path[0]
-            if len(self.path) == 0:
-                return True
-            return False
+    def step(self,maze,rooms):
+            if check_condition(self):
+                poststep(self, maze)
+                self._path = []
+                self._path = calculate_route(self,maze,rooms)
+                self.counter = 5
+
+            self.do_step(maze)
+            print(self.current_loc.x)
+
+
+    def do_step(self,maze):
+        # for point in self.path:
+        #     yield point
+        self.move(maze, self.path[0])
+        del self.path[0]
+        pass
 
     def get_most_close_room(self, rooms):
         rooms_distance = {}
