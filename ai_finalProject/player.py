@@ -72,7 +72,7 @@ class Player():
         setteled_players = 0
         locations = []
         while setteled_players < number_of_players:
-            new_location = randint(0, number_of_rooms)
+            new_location = randint(0, number_of_rooms-1)
             if new_location not in locations:
                 setteled_players += 1
                 locations.append(new_location)
