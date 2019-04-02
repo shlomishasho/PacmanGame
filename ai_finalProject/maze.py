@@ -167,6 +167,7 @@ class MazeGenerator:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                pygame.display.flip()
 
     def setup_maze(self, ):
         self.init_rooms()
