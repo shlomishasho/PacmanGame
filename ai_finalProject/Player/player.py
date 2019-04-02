@@ -1,6 +1,6 @@
 from math import sqrt
 from random import randint
-from ai_finalProject.Player.modes_util import step
+from ai_finalProject.Player.modes_util import calculate_route,euclidean_distance
 
 
 class Player():
@@ -14,6 +14,7 @@ class Player():
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
         self.size = (8, 8)
+        self.path = []
         pass
 
     @property
@@ -90,5 +91,28 @@ class Player():
     def generate_color_for_player(player_number):
         return (randint(player_number, 255 - player_number),) * 3
 
-    def search(self,maze,rooms):
-        return step(self,maze,rooms)
+    def step(self,maze,rooms,is_new_target = False):
+        if is_new_target:
+            self.path = calculate_route(self,maze,rooms)
+            return False
+        else :
+            self.move(maze,self.path[0])
+            del self.path[0]
+            if len(self.path) == 0:
+                return True
+            return False
+
+    def get_most_close_room(self, rooms):
+        rooms_distance = {}
+        distance = 0
+        for room in rooms:
+            distance = euclidean_distance(room.center, self.current_loc)
+            rooms_distance[room.id] = distance
+
+        sorted_rooms_by_distance = sorted(rooms_distance.items(), key=lambda kv: kv[1])
+
+        for id, dis in sorted_rooms_by_distance:
+            if len(rooms[id].health) > 0:
+                return id
+
+        return -1

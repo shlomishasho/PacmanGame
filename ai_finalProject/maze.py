@@ -159,10 +159,12 @@ class MazeGenerator:
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player(new_player_num)
             self.players.append(Player(room_for_player.center, new_color))
-            self.maze.update_player(self.players[new_player_num])
+            # self.maze.update_player(self.players[new_player_num])
+            self.maze.update_player(self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
 
     def start_game(self):
         done = False
+        found = False
         self.setup_maze()
         while True:
             for event in pygame.event.get():
@@ -173,7 +175,7 @@ class MazeGenerator:
             for player in self.players:
                 """here we will discuss in the order of the modes of each player, how to do it,
                 for now i'm just checking the astar func"""
-                player.search(self.maze,self.rooms)
+                found = player.step(self.maze,self.rooms,True) if not found else player.step(self.maze, self.rooms)
                 pygame.display.flip()
 
     def setup_maze(self, ):
