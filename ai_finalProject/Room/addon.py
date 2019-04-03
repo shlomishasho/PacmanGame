@@ -8,7 +8,7 @@ class Addon():
 
     @property
     def room_id(self):
-        return self._lroom_id
+        return self._room_id
 
     @room_id.setter
     def room_id(self, new_room_id):

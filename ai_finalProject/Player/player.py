@@ -30,7 +30,8 @@ class Player ():
         self._color = color
         self.size = (8, 8)
         self.counter = 5
-        self._path = ['TARGET', '-']
+        self._path = ['TARGET']
+        self.target=None
         self.enemy = None
 
     @property

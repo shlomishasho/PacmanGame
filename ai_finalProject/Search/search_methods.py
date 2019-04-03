@@ -1,64 +1,56 @@
-from ai_finalProject.point import RoomPoint,RoomStatus
+from ai_finalProject.point import RoomPoint, RoomStatus, Point, PointStatus
 from ai_finalProject.Search.node import *
 from heapq import *
 from ai_finalProject.Search.priorityQueue import *
 
 
-def a_star(maze, player, goal):
+def a_star(maze, player, goal, goal_size):
     start = player.current_loc
-    target = RoomPoint(goal[0], goal[1])
+    target = RoomPoint (goal[0], goal[1])
     neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
     visited = [(start.x, start.y)]
     path = []
-
-    new_node = Node(start, target)
+    new_node = Node (start, target)
     queue = []
-    heappush(queue, new_node)
+    heappush (queue, new_node)
 
     while queue:
-        temp_node = heappop(queue)
+        temp_node = heappop (queue)
         current_point = temp_node.get_point()
         path.insert(len(path), current_point)
-        if current_point == target:
-            # path.insert(len(path), 'TARGET')
+        if reached_to (target, goal_size, current_point):
             return path
         else:
             for i, j in neighbors:
-                if maze[current_point.x + int(player.size[0]/2)*i + i][current_point.y + int(player.size[0]/2)*j + j].status != RoomStatus.WALL:
-                    new_node = Node(maze[current_point.x + i][current_point.y + j], target)
-                    if ((current_point.x + i), (current_point.y + j)) not in visited:
-                        visited.append((current_point.x + i, current_point.y + j))
-                        heappush(queue, new_node)
+                object_loc_x = current_point.x + int (player.size[0]) * i
+                # object_loc_x = current_point.x + i
+                # object_loc_y = current_point.y + j
+                object_loc_y = current_point.y + int (player.size[0]) * j
 
-    print('queue is empty')
+                if (object_loc_x) >= len (maze[0]) or (object_loc_y) >= len (maze):
+                    print('over the limit')
+                    pass
+                elif is_free_space (object_loc_x, object_loc_y, maze, PointStatus.get_colors_for_player (player),
+                                    player.size):
+                    # elif maze[object_loc_x][object_loc_y].status in PointStatus.get_colors_for_player (player):
+                    new_node = Node (maze[object_loc_x][object_loc_y], target)
+                    if (object_loc_x, object_loc_y) not in visited:
+                        visited.append ((object_loc_x, object_loc_y))
+                        heappush (queue, new_node)
+
+    print ('queue is empty')
 
 
+def reached_to(target, target_size, location):
+    if location.x in range (target.x - target_size[0] // 2, target.x + (target_size[0] // 2)+1):
+        if location.y in range (target.y - target_size[1] // 2, target.y + (target_size[1] // 2)+1):
+            return True
+    return False
 
-def a_star2(maze, player, goal):
-    """will checked"""
-    start = player.current_loc
-    target = RoomPoint(goal[0], goal[1])
-    neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-    visited = [(start.x, start.y)]
-    path = []
 
-    new_node = Node(start, target)
-    queue = PriorityQueue()
-    queue.push(new_node)
-
-    while queue:
-        temp_node = queue.pop_value()
-        current_point = temp_node.get_point()
-        path.insert(len(path), current_point)
-        if current_point == target:
-            # path.insert(len(path), 'TARGET')
-            return path
-        else:
-            for i, j in neighbors:
-                if maze[current_point.x + int(player.size[0]/2)*i + i][current_point.y + int(player.size/2)*j + j].status != RoomStatus.WALL:
-                    new_node = Node(maze[current_point.x + int(player.size/2)*i + i][current_point.y + int(player.size/2)*j + j], target)
-                    if ((current_point.x + int(player.size/2)*i + i), (current_point.y + int(player.size/2)*j + j)) not in visited:
-                        visited.append((current_point.x + int(player.size/2)*i + i, current_point.y + int(player.size/2)*j + j))
-                        queue.push(new_node)
-
-    print('queue is empty')
+def is_free_space(x, y, maze, colors, size):
+    for i in range (x - size[0] // 2, x + size[0] // 2):
+        for j in range (y - size[1] // 2, y + size[1] // 2):
+            if maze[i][j].status != PointStatus.SPACE:
+                return False
+    return True

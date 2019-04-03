@@ -72,18 +72,21 @@ class maze:
 
     def update_player(self, player, color=PointStatus.SPACE):
         pygame.draw.rect (self.screen, color,
-                          pygame.Rect (player.current_loc.x, player.current_loc.y, *player.size))
+                          pygame.Rect (player.current_loc.x,
+                                       player.current_loc.y, *player.size))
+
         self.update_element_on_matrix (player.current_loc.get_location_as_tuple (), player.size, color)
 
     def update_element_on_matrix(self, location, size, new_status):
-        for x in range (location[0], location[0] + size[0]):
-            for y in range (location[1], location[1] + size[1]):
+        for x in range (location[0]-size[0]//2, min (location[0]+ size[0]//2, self.width)):
+            for y in range (location[1]-size[1]//2, min (location[1] + size[1]//2, self.height)):
                 self.maze_matrix[x][y].status = new_status
 
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
     MAX_OF_ROOMS = 10
+    PLAYER_SIZE = (8, 8)
 
     def __init__(self, height, width, number_of_players):
         self.height = height
@@ -162,11 +165,16 @@ class MazeGenerator:
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player (new_player_num)
             """here do random to pass player mode name function """
-            self.players.append (Player (room_for_player.center, new_color))
+            #new_player_cord_x = room_for_player.center.x - self.PLAYER_SIZE[0] // 2
+            #new_player_cord_y = room_for_player.center.y - self.PLAYER_SIZE[1] // 2
+            """here do random to pass player mode name function """
+            new_player_cord_x = room_for_player.center.x
+            new_player_cord_y = room_for_player.center.y
+            self.players.append (Player (self.maze.maze_matrix[new_player_cord_x][new_player_cord_y], new_color))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player (self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
             """TODO: change play mode key"""
-            self.players[new_player_num].set_play_mode ('health',self)
+            self.players[new_player_num].set_play_mode ('health', self)
 
     def start_game(self):
         done = False
@@ -179,7 +187,7 @@ class MazeGenerator:
             pygame.display.flip ()
 
             for player in self.players:
-                player.step(self)
+                player.step (self)
                 done = self.check_if_game_over ()
                 pygame.display.flip ()
 
@@ -188,13 +196,14 @@ class MazeGenerator:
         self.init_tunnles ()
         self.init_addons ()
         self.maze.update_matrix_after_init ()
-        pygame.display.flip ()
         self.init_players (self.number_of_players)
-
+        pygame.display.flip ()
 
     def check_if_game_over(self):
-        return list (filter (lambda player: player.health_points <= 0, self.players)) == []
+        return list (filter (lambda player: player.health_points <= 0, self.players)) != []
 
+    def get_room_by_id(self,id):
+        return [room for room in self.rooms if room.id==id][0]
 
 if __name__ == '__main__':
     m = MazeGenerator (600, 600, 2)

@@ -1,4 +1,4 @@
-class PointStatus():
+class PointStatus ():
     """TODO: need to initiialize by number of players"""
     WALL = (0, 0, 0)
     SPACE = (255, 255, 255)
@@ -8,15 +8,19 @@ class PointStatus():
     def get_colors(cls):
         return [cls.WALL, cls.SPACE, *cls.PLAYERS]
 
+    @classmethod
+    def get_colors_for_player(cls, player):
+        return [PointStatus.SPACE] + [p_color for p_color in PointStatus.PLAYERS if player.color == p_color]
 
-class RoomStatus(PointStatus):
+
+class RoomStatus (PointStatus):
     HEALTH = (220, 20, 60)
     AMMO = (72, 61, 139)
 
     @classmethod
     def get_colors(cls):
-        point_color_list = super().get_colors()
-        point_color_list.extend([cls.HEALTH, cls.AMMO])
+        point_color_list = super ().get_colors ()
+        point_color_list.extend ([cls.HEALTH, cls.AMMO])
         return point_color_list
 
 
@@ -47,9 +51,9 @@ class Point:
         return self.x, self.y,
 
 
-class RoomPoint(Point):
+class RoomPoint (Point):
     def __init__(self, x, y, room_id=None, status=PointStatus.SPACE):
-        super().__init__(x, y, status)
+        super ().__init__ (x, y, status)
         self._room_id = room_id
 
     @property
