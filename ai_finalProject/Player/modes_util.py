@@ -75,19 +75,29 @@ def find_closest_room(player_loc, rooms,f):
     print('no left health points')
     return None
 
+def get_enemy_location(player):
+    pass
+
 
 def clean_and_stepforward(player,maze):
     player.move(maze, player.path[0])
     del player.path[0]
 
 
-def do_health(player,maze,rooms):
-
+def do_attack(player,maze,rooms):
     if isinstance(player.path[1], str) and isinstance(player.path[0], str):
         """happen only in the start"""
-        (room_id_target, target) = find_closest_room(player.current_loc, rooms, health_loc)
-        player.path = a_star(maze.maze_matrix,player,target)
-    elif isinstance(player.path[1], str):
+        # (room_id_target, target) = get_enemy_location(player.current_loc, rooms, health_loc)
+        # player.path = a_star(maze.maze_matrix,player,target)
+
+def do_health(player,maze,rooms):
+
+    # if isinstance(player.path[1], str) and isinstance(player.path[0], str):
+    #     """happen only in the start"""
+    #     (room_id_target, target) = find_closest_room(player.current_loc, rooms, health_loc)
+    #     player.path = a_star(maze.maze_matrix,player,target)
+    if isinstance(player.path[1], str):
+        print('find new target')
         player.health_points = min(player.health_points + 10, 100)
         maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
         (room_id_target,target) = find_closest_room(player.current_loc,rooms,health_loc)
@@ -98,11 +108,11 @@ def do_health(player,maze,rooms):
 
 def do_ammo(player,maze,rooms):
 
-    if isinstance(player.path[1], str) and isinstance(player.path[0], str):
-        """happen only in the start"""
-        (room_id_target, target) = find_closest_room(player.current_loc, rooms, ammo_loc)
-        player.path = a_star(maze.maze_matrix,player,target)
-    elif isinstance(player.path[1], str):
+    # if isinstance(player.path[1], str) and isinstance(player.path[0], str):
+    #     """happen only in the start"""
+    #     (room_id_target, target) = find_closest_room(player.current_loc, rooms, ammo_loc)
+    #     player.path = a_star(maze.maze_matrix,player,target)
+    if isinstance(player.path[1], str):
         player.ammo_points = min(player.ammo_points + 10, 100)
         maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
         (room_id_target,target) = find_closest_room(player.current_loc,rooms,ammo_loc)

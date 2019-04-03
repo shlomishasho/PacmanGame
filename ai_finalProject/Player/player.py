@@ -17,7 +17,7 @@ class Player():
         self.size = (8, 8)
         self.counter = 5
         self._path = ['TARGET','-']
-        self.goal = None
+        self.enemy = None
 
     @property
     def path(self):
@@ -35,6 +35,7 @@ class Player():
         return self._play_mode(self,maze,rooms)
 
     def set_play_mode(self):
+        print('change plat mode')
         index = randint(0,len(self.func_list)-1)
         self._play_mode = self.func_list[index]
 

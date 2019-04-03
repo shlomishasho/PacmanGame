@@ -16,6 +16,9 @@ class Node:
     def f(self):
         return self.g + self.h
 
+    # def g(self):
+    #     return self.g
+
     def h_distance(self):
         return sqrt(pow(self.cur_point.x - self.target.x, 2) + pow(self.cur_point.y - self.target.y, 2))
 

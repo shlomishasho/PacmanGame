@@ -8,7 +8,7 @@ from ai_finalProject.Player.player import Player
 
 
 class maze:
-    TUNNEL_WIDTH = 12
+    TUNNEL_WIDTH = 15
 
     def __init__(self, width, height):
         self.height = height
@@ -54,7 +54,7 @@ class maze:
                         if isinstance(self.maze_matrix[x][y], RoomPoint):
                             for room_color in RoomStatus.get_colors():
                                 if self.is_same_color(color, room_color):
-                                    self.maze_matrix[x][y].status = color
+                                    self.maze_matrix[x][y].status = room_color
 
     def is_same_color(self, color1, color2):
         for i in range(0, len(color2)):
@@ -164,15 +164,15 @@ class MazeGenerator:
             self.players.append(Player(room_for_player.center, new_color))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player(self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
+            self.players[new_player_num].set_play_mode()
+
+
 
     def start_game(self):
         done = False
         not_found = False
         self.setup_maze()
 
-        for player in self.players:
-            """initialize"""
-            player.set_play_mode()
 
         while True:
             for event in pygame.event.get():
@@ -188,10 +188,10 @@ class MazeGenerator:
         self.init_rooms()
         self.init_tunnles()
         self.init_addons()
+        self.maze.update_matrix_after_init()
         self.init_players(self.number_of_players)
         pygame.display.flip()
 
-        self.maze.update_matrix_after_init()
 
 
 if __name__ == '__main__':
