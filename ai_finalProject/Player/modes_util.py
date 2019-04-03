@@ -33,7 +33,7 @@ def a_star(maze, player, goal):
             return path
         else:
             for i, j in neighbors:
-                if maze[current_point.x + i][current_point.y + j].status != RoomStatus.WALL:
+                if maze[current_point.x+ + i][current_point.y + j].status != RoomStatus.WALL:
                     new_node = Node(maze[current_point.x + i][current_point.y + j], target)
                     if ((current_point.x + i), (current_point.y + j)) not in visited:
                         visited.append((current_point.x + i, current_point.y + j))
