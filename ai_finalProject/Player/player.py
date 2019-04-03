@@ -1,6 +1,11 @@
 from math import sqrt
 from random import randint
-from ai_finalProject.Player.modes_util import do_ammo,do_health
+from ai_finalProject.Player.common_characteristics import *
+from ai_finalProject.Player.gather_ammo_characteristics import *
+from ai_finalProject.Player.gather_health_characteristics import *
+from ai_finalProject.Player.gather_attack_characteristics import *
+from ai_finalProject.Player.gather_defence_characteristics import *
+
 
 class Player():
     START_HEALTH_POINTS = 100
