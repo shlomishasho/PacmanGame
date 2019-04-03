@@ -6,7 +6,7 @@ from heapq import *
 from math import sqrt
 #
 # things that we have to do :
-#     1. take care of removing the addon from the list in the rooms
+#     1. increase tunnel size
 #     2. generate play mode each few time .
 #     3. attack,defence functions
 #     4. what about one player get the target of the other one? we have to give him another target
@@ -50,7 +50,9 @@ def euclidean_distance(a, b):
 
 def health_loc(room):
     if len(room.health) > 0:
-        return (room.id,room.health[0].location)
+        save_loc = (room.id,room.health[0].location)
+        del room.health[0]
+        return save_loc
     return False
 
 

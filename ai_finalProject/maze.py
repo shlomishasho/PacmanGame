@@ -8,7 +8,7 @@ from ai_finalProject.Player.modes_util import do_health,do_ammo
 
 
 class maze:
-    TUNNEL_WIDTH = 5
+    TUNNEL_WIDTH = 12
 
     def __init__(self, width, height):
         self.height = height
