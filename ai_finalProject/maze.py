@@ -169,14 +169,12 @@ class MazeGenerator:
 
     def start_game(self):
         done = False
-        not_found = False
         self.setup_maze ()
 
         while not done:
             for event in pygame.event.get ():
                 if event.type == pygame.QUIT:
                     done = True
-                    pygame.quit ()
             pygame.display.flip ()
 
             for player in self.players:
