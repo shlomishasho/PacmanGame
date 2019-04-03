@@ -23,10 +23,10 @@ def a_star(maze, player, goal):
             return path
         else:
             for i, j in neighbors:
-                if maze[current_point.x + i][current_point.y + j].status != RoomStatus.WALL:
-                    new_node = Node(maze[current_point.x + i][current_point.y + j], target)
-                    if ((current_point.x + i), (current_point.y + j)) not in visited:
-                        visited.append((current_point.x + i, current_point.y + j))
+                if maze[current_point.x + int(player.size/2)*i + i][current_point.y + int(player.size/2)*j + j].status != RoomStatus.WALL:
+                    new_node = Node(maze[current_point.x + int(player.size/2)*i + i][current_point.y + int(player.size/2)*j + j], target)
+                    if ((current_point.x + int(player.size/2)*i + i), (current_point.y + int(player.size/2)*j + j)) not in visited:
+                        visited.append((current_point.x + int(player.size/2)*i + i, current_point.y + int(player.size/2)*j + j))
                         heappush(queue, new_node)
 
     print('queue is empty')
