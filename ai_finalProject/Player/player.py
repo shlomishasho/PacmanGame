@@ -83,7 +83,7 @@ class Player():
 
     def move(self, maze, new_location):
         maze.update_player(self)
-        self.current_loc = new_location
+        self._current_loc = new_location
         maze.update_player(self, self.color)
 
     @staticmethod

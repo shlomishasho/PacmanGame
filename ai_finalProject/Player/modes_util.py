@@ -6,10 +6,8 @@ from heapq import *
 from math import sqrt
 #
 # things that we have to do :
-#     1. increase tunnel size
 #     2. generate play mode each few time .
 #     3. attack,defence functions
-#     4. what about one player get the target of the other one? we have to give him another target
 #     5. if we have a time - gather ammo,health functions
 #     6. change the colors of the players, we dont want space color
 #     7. one to 100 runs there is an execption of out of range,
@@ -58,7 +56,9 @@ def health_loc(room):
 
 def ammo_loc(room):
     if len(room.ammo) > 0:
-        return room.ammo[0].location
+        save_loc = (room.id,room.ammo[0].location)
+        del room.ammo[0]
+        return save_loc
     return False
 
 
@@ -90,7 +90,6 @@ def do_health(player,maze,rooms):
     elif isinstance(player.path[1], str):
         player.health_points = min(player.health_points + 10, 100)
         maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
-        """have to delete from list in rooms"""
         (room_id_target,target) = find_closest_room(player.current_loc,rooms,health_loc)
         player.path = a_star(maze.maze_matrix,player,target)
 
@@ -106,7 +105,6 @@ def do_ammo(player,maze,rooms):
     elif isinstance(player.path[1], str):
         player.ammo_points = min(player.ammo_points + 10, 100)
         maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
-        """have to delete from list in rooms"""
         (room_id_target,target) = find_closest_room(player.current_loc,rooms,ammo_loc)
         player.path = a_star(maze.maze_matrix,player,target)
 
