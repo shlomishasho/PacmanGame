@@ -85,7 +85,7 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 10
+    MAX_OF_ROOMS = 15
     PLAYER_SIZE = (8, 8)
 
     def __init__(self, height, width, number_of_players):
@@ -196,7 +196,12 @@ class MazeGenerator:
         pygame.display.flip ()
 
     def check_if_game_over(self):
-        return list (filter (lambda player: player.health_points <= 0, self.players)) != []
+        winners=list (filter (lambda player: player.health_points <= 0, self.players))
+        if len(winners) >0 :
+            for winner in winners:
+                print("player {id} Win !!!  ".format(id=winner.id))
+                return  True
+        return False
 
     def get_room_by_id(self,id):
         return [room for room in self.rooms if room.id==id][0]
