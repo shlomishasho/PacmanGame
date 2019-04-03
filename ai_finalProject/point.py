@@ -12,6 +12,10 @@ class PointStatus ():
     def get_colors_for_player(cls, player):
         return [PointStatus.SPACE] + [p_color for p_color in PointStatus.PLAYERS if player.color == p_color]
 
+    @classmethod
+    def get_players_colors(cls):
+        return PointStatus.PLAYERS
+
 
 class RoomStatus (PointStatus):
     HEALTH = (220, 20, 60)
@@ -68,6 +72,4 @@ class RoomPoint (Point):
         return self.x < other.x and self.y < other.y
 
     def __eq__(self, other):
-        # if other == None:
-        #     print('none now')
         return self.x == other.x and self.y == other.y

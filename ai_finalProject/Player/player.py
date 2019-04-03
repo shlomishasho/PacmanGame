@@ -70,7 +70,7 @@ class Player ():
                 self.set_play_mode ('defense', maze)
 
     def enough_extras(self):
-        return self.health_points > self.START_HEALTH_POINTS / 2 and self.ammo_points > self.START_AMMO_POINTS
+        return self.health_points > (self.START_HEALTH_POINTS / 2) and self.ammo_points > (self.START_AMMO_POINTS/2)
 
     @property
     def health_points(self):
@@ -115,7 +115,7 @@ class Player ():
 
     @staticmethod
     def generate_color_for_player(player_number):
-        colors = PointStatus.get_colors ()
+        colors = PointStatus.get_players_colors ()
         return colors[player_number]
 
     def get_room_id(self, maze):

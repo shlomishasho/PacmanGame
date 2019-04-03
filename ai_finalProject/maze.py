@@ -164,10 +164,6 @@ class MazeGenerator:
         for new_player_num in range (0, number_of_players):
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player (new_player_num)
-            """here do random to pass player mode name function """
-            #new_player_cord_x = room_for_player.center.x - self.PLAYER_SIZE[0] // 2
-            #new_player_cord_y = room_for_player.center.y - self.PLAYER_SIZE[1] // 2
-            """here do random to pass player mode name function """
             new_player_cord_x = room_for_player.center.x
             new_player_cord_y = room_for_player.center.y
             self.players.append (Player (self.maze.maze_matrix[new_player_cord_x][new_player_cord_y], new_color))

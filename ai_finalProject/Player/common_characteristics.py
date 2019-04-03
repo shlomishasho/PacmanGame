@@ -34,7 +34,7 @@ def get_enemy_location(player, enemies):
 
 def enemy_in_my_room(player, maze):
     closet_enemy = get_enemy_location(player, maze.players)
-    if closet_enemy.get_room_id (maze.maze.maze_matrix) == player.get_room_id (maze.maze.maze_matrix):
+    if closet_enemy.get_room_id (maze.maze.maze_matrix) == player.get_room_id (maze.maze.maze_matrix) and player.get_room_id (maze.maze.maze_matrix) is not None:
         return True
     return False
 

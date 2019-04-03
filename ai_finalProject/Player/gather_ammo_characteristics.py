@@ -5,7 +5,7 @@ from ai_finalProject.Search.search_methods import a_star
 def ammo_loc(room):
 
     if len(room.ammo) > 0:
-        save_loc = (room.id,room.ammo[0].location)
+        save_loc = (room.id,room.ammo[0])
         del room.ammo[0]
         return save_loc
     return False

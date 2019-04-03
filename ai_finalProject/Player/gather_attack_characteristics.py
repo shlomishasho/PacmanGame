@@ -6,7 +6,7 @@ BASE_SHOT = 100
 
 
 def attack_loc(room):
-    return (room.id, room)
+    return room.id, room
 
 
 def do_attack(player, maze):
@@ -14,7 +14,9 @@ def do_attack(player, maze):
         player.counter_attacks = 10
         player.calculate_play_mode (maze)
     else:
-        clean_and_stepforward (player, maze)
+        if not isinstance(player.path[0],str):
+            clean_and_stepforward (player, maze)
+        else: player.calculate_play_mode(maze)
 
     if enemy_in_my_room (player, maze):
         distance_from_enemy = euclidean_distance (player.current_loc, player.enemy.current_loc)
