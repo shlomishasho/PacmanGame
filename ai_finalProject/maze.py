@@ -4,7 +4,7 @@ from random import randint
 from ai_finalProject.point import Point, RoomPoint, PointStatus, RoomStatus
 from ai_finalProject.Room.room import Room, Coordinates
 from ai_finalProject.Player.player import Player
-from ai_finalProject.Player.modes_util import do_health,do_ammo
+# from ai_finalProject.Player.modes_util import do_health,do_ammo
 
 
 class maze:
@@ -161,7 +161,7 @@ class MazeGenerator:
             room_for_player = self.rooms[locations[new_player_num]]
             new_color = Player.generate_color_for_player(new_player_num)
             """here do random to pass player mode name function """
-            self.players.append(Player(room_for_player.center, new_color,do_health))
+            self.players.append(Player(room_for_player.center, new_color))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player(self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
 
@@ -169,6 +169,11 @@ class MazeGenerator:
         done = False
         not_found = False
         self.setup_maze()
+
+        for player in self.players:
+            """initialize"""
+            player.set_play_mode()
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -176,10 +181,7 @@ class MazeGenerator:
             pygame.display.flip()
 
             for player in self.players:
-                """here we will discuss in the order of the modes of each player, how to do it,
-                for now i'm just checking the astar func"""
-                # player.step(self.maze,self.rooms)
-                player.f(player,self.maze,self.rooms)
+                player.step(self.maze,self.rooms)
                 pygame.display.flip()
 
     def setup_maze(self, ):

@@ -1,16 +1,16 @@
 from math import sqrt
 from random import randint
-
+from ai_finalProject.Player.modes_util import do_ammo,do_health
 
 class Player():
     START_HEALTH_POINTS = 100
     START_AMMO_POINTS = 100
 
-    def __init__(self, start_point, color,f):
+    def __init__(self, start_point, color):
         self._current_loc = start_point
         """have to change that"""
-        self._play_mode = 'health'
-        self.f = f
+        self._play_mode = None
+        self.func_list = [do_health,do_ammo]
         self._health_points = self.START_HEALTH_POINTS
         self._ammo_points = self.START_AMMO_POINTS
         self._color = color
@@ -18,7 +18,6 @@ class Player():
         self.counter = 5
         self._path = ['TARGET','-']
         self.goal = None
-        pass
 
     @property
     def path(self):
@@ -32,13 +31,12 @@ class Player():
     def current_loc(self, new_location):
         self._current_loc = new_location
 
-    @property
-    def play_mode(self):
-        return self._play_mode(self)
+    def step(self,maze,rooms):
+        return self._play_mode(self,maze,rooms)
 
-    @play_mode.setter
-    def play_mode(self, new_play_mode):
-        self._play_mode = new_play_mode
+    def set_play_mode(self):
+        index = randint(0,len(self.func_list)-1)
+        self._play_mode = self.func_list[index]
 
     @property
     def health_points(self):
