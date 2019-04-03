@@ -133,5 +133,5 @@ class Player ():
     def get_room_id(self,maze):
         if not isinstance(maze[self.current_loc.x][self.current_loc.y],RoomPoint):
             return None
-        else
+        else:
             return maze[self.current_loc.x][self.current_loc.y].room_id

@@ -43,7 +43,7 @@ def get_enemy_location(player, enemies):
 
 
 def enemy_in_my_room(player, maze):
-    closet_enemy = get_enemy_location (player, maze.players)
+    closet_enemy = get_enemy_location(player, maze.players)
     if closet_enemy.get_room_id (maze) == player.get_room_id (maze):
         return True
     return False
