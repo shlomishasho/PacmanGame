@@ -41,12 +41,12 @@ def a_star(maze, player, goal, goal_size):
     print ('queue is empty')
 
 
+
 def reached_to(target, target_size, location):
     if location.x in range (target.x - target_size[0] // 2, target.x + (target_size[0] // 2)+1):
         if location.y in range (target.y - target_size[1] // 2, target.y + (target_size[1] // 2)+1):
             return True
     return False
-
 
 def is_free_space(x, y, maze, colors, size):
     for i in range (x - size[0] // 2, x + size[0] // 2):

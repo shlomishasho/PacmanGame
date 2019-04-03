@@ -174,7 +174,7 @@ class MazeGenerator:
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player (self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
             """TODO: change play mode key"""
-            self.players[new_player_num].set_play_mode ('health', self)
+            self.players[new_player_num].set_play_mode('health',self)
 
     def start_game(self):
         done = False
