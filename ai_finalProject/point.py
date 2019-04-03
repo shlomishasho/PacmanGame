@@ -2,7 +2,7 @@ class PointStatus ():
     """TODO: need to initiialize by number of players"""
     WALL = (0, 0, 0)
     SPACE = (255, 255, 255)
-    PLAYERS = [(10, 10, 10), (50, 50, 50)]
+    PLAYERS = [(100, 100, 100), (50, 50, 50)]
 
     @classmethod
     def get_colors(cls):

@@ -59,7 +59,6 @@ class Room:
         self._ammo = new_ammo
 
 
-
     def is_overlap(self, other):
         return abs(self.center.x - other.center.x) < (self.width + other.width) / 2 + 5 and abs(self.center.y -
                                                                                                 other.center.y) < (

@@ -49,8 +49,8 @@ def reached_to(target, target_size, location):
     return False
 
 def is_free_space(x, y, maze, colors, size):
-    for i in range (x - size[0] // 2, x + size[0] // 2):
-        for j in range (y - size[1] // 2, y + size[1] // 2):
+    for i in range (x - size[0] // 2, min(x + size[0] // 2,len(maze))):
+        for j in range (y - size[1] // 2, min(y + size[1] // 2,len(maze))):
             if maze[i][j].status != PointStatus.SPACE:
                 return False
     return True
