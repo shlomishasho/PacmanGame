@@ -16,6 +16,8 @@ class Player ():
     player_characteristics_options = {
         'health': [do_health, init_health_mode],
         'ammo': [do_ammo, init_ammo_mode]
+        # 'defence': [do_defence, init_defence_mode],
+        # 'attack': [do_attack, init_attack_mode]
     }
 
     def __init__(self, start_point, color):
@@ -43,26 +45,26 @@ class Player ():
     def current_loc(self, new_location):
         self._current_loc = new_location
 
-    def step(self, maze, rooms):
-        return self._play_mode (self, maze, rooms)
+    def step(self, maze):
+        return self._play_mode (self, maze)
 
-    def set_play_mode(self, play_mode=' '):
-        print ('change play mode')
-        index = randint (0, len (self.func_list) - 1)
-        self._play_mode = self.func_list[index]
+    def set_play_mode(self, play_mode,maze):
+        print('change play mode : ', play_mode)
+        self._play_mode = self.player_characteristics_options[play_mode][0]
+        self.player_characteristics_options[play_mode][1](self,maze)
 
     def calculate_play_mode(self, maze):
         if enemy_in_my_room(self,maze):
-            self.set_play_mode('attack')
+            self.set_play_mode('attack',maze)
         elif self.health_points < self.RISK_HEALTH:
-            self.set_play_mode ('health')
+            self.set_play_mode ('health',maze)
         elif self.ammo_points < self.LOW_AMMO:
-            self.set_play_mode ('ammo')
+            self.set_play_mode ('ammo',maze)
         else:
             if self.enough_extras() :
-                self.set_play_mode('attack')
+                self.set_play_mode('attack',maze)
             else:
-                self.set_play_mode('defense')
+                self.set_play_mode('defense',maze)
 
 
     def enough_extras(self):
@@ -109,9 +111,9 @@ class Player ():
         ----> finish the game """
 
     def move(self, maze, new_location):
-        maze.update_player (self)
+        maze.maze.update_player (self)
         self._current_loc = new_location
-        maze.update_player (self, self.color)
+        maze.maze.update_player (self, self.color)
 
     @staticmethod
     def get_start_positions_for_players(number_of_rooms, number_of_players):

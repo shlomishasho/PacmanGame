@@ -165,7 +165,8 @@ class MazeGenerator:
             self.players.append (Player (room_for_player.center, new_color))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player (self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
-            self.players[new_player_num].set_play_mode ()
+            """TODO: change play mode key"""
+            self.players[new_player_num].set_play_mode ('health',self)
 
     def start_game(self):
         done = False
@@ -177,8 +178,8 @@ class MazeGenerator:
                     done = True
             pygame.display.flip ()
 
-            for player in self.players and not done:
-                player.step(self.maze, self.rooms)
+            for player in self.players:
+                player.step(self)
                 done = self.check_if_game_over ()
                 pygame.display.flip ()
 
@@ -187,8 +188,9 @@ class MazeGenerator:
         self.init_tunnles ()
         self.init_addons ()
         self.maze.update_matrix_after_init ()
-        self.init_players (self.number_of_players)
         pygame.display.flip ()
+        self.init_players (self.number_of_players)
+
 
     def check_if_game_over(self):
         return list (filter (lambda player: player.health_points <= 0, self.players)) == []
