@@ -5,7 +5,7 @@ from ai_finalProject.Player.gather_ammo_characteristics import *
 from ai_finalProject.Player.gather_health_characteristics import *
 from ai_finalProject.Player.gather_attack_characteristics import *
 from ai_finalProject.Player.gather_defence_characteristics import *
-from ai_finalProject.point import RoomPoint
+from ai_finalProject.point import RoomPoint, PointStatus
 
 
 class Player ():
@@ -48,27 +48,27 @@ class Player ():
     def step(self, maze):
         return self._play_mode (self, maze)
 
-    def set_play_mode(self, play_mode,maze):
-        print('change play mode : ', play_mode)
+    def set_play_mode(self, play_mode, maze):
+        print ('change play mode : ', play_mode)
         self._play_mode = self.player_characteristics_options[play_mode][0]
-        self.player_characteristics_options[play_mode][1](self,maze)
+        self.player_characteristics_options[play_mode][1] (self, maze)
 
     def calculate_play_mode(self, maze):
-        if enemy_in_my_room(self,maze):
-            self.set_play_mode('attack',maze)
+        if enemy_in_my_room (self, maze):
+            self.set_play_mode ('attack', maze)
         elif self.health_points < self.RISK_HEALTH:
-            self.set_play_mode ('health',maze)
+            self.set_play_mode ('health', maze)
         elif self.ammo_points < self.LOW_AMMO:
-            self.set_play_mode ('ammo',maze)
+            self.set_play_mode ('ammo', maze)
         else:
-            if self.enough_extras() :
-                self.set_play_mode('attack',maze)
+            if self.enough_extras ():
+                self.set_play_mode ('attack', maze)
             else:
-                self.set_play_mode('defense',maze)
-
+                self.set_play_mode ('defense', maze)
 
     def enough_extras(self):
-        return self.health_points > self.START_HEALTH_POINTS/2 and self.ammo_points > self.START_AMMO_POINTS
+        return self.health_points > self.START_HEALTH_POINTS / 2 and self.ammo_points > self.START_AMMO_POINTS
+
     @property
     def health_points(self):
         return self._health_points
@@ -129,11 +129,11 @@ class Player ():
 
     @staticmethod
     def generate_color_for_player(player_number):
-        colors = [(0, 255, 255), (5, 5, 5)]
+        colors = PointStatus.get_colors ()
         return colors[player_number]
 
-    def get_room_id(self,maze):
-        if not isinstance(maze[self.current_loc.x][self.current_loc.y],RoomPoint):
+    def get_room_id(self, maze):
+        if not isinstance (maze[self.current_loc.x][self.current_loc.y], RoomPoint):
             return None
         else:
             return maze[self.current_loc.x][self.current_loc.y].room_id
