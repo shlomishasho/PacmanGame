@@ -173,7 +173,6 @@ class MazeGenerator:
         not_found = False
         self.setup_maze()
 
-
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
