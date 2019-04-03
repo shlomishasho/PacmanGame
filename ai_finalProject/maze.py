@@ -177,8 +177,8 @@ class MazeGenerator:
                     done = True
             pygame.display.flip ()
 
-            for player in self.players:
-                player.step (self.maze, self.rooms)
+            for player in self.players and not done:
+                player.step(self.maze, self.rooms)
                 done = self.check_if_game_over ()
                 pygame.display.flip ()
 
