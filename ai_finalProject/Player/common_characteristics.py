@@ -16,8 +16,7 @@ def find_target_room(player_loc, rooms, f,is_reverse = False):
         if loc:
             return loc
 
-    print('no left health points')
-    return None
+    return None,None
 
 
 def get_enemy_location(player, enemies):

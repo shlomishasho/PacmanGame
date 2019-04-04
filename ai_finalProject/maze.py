@@ -18,12 +18,16 @@ class maze:
         pygame.init ()
         self.screen = pygame.display.set_mode ((self.height, self.width))
         self.maze_matrix = self.init_maze_matrix ()
+        self.addons_amount=0
+
+
 
     # Region functions for init the Maze
     def init_maze_matrix(self):
         return [[Point (x, y) for y in range (self.width)] for x in range (self.height)]
 
     def draw_addons(self, color, size, location):
+        self.addons_amount+=1
         pygame.draw.rect (self.screen, color, pygame.Rect (location[0], location[1], size[0], size[1]))
 
     def draw_room(self, color, room):
@@ -66,26 +70,28 @@ class maze:
 
     # End Region
 
-    def remove_addon(self, size, location):
-        pygame.draw.rect (self.screen, PointStatus.SPACE, pygame.Rect (location[0], location[1], size[0], size[1]))
-        self.update_element_on_matrix (location, size, RoomStatus.SPACE)
+    def remove_addon(self, addon):
+        pygame.draw.rect (self.screen, PointStatus.SPACE, pygame.Rect (addon.coordinates.left, addon.coordinates.top,*addon.get_dimensions()))
+        self.update_element_on_matrix (addon.location, addon.get_dimensions(), RoomStatus.SPACE)
+        self.addons_amount-=1
+        pygame.display.flip ()
 
     def update_player(self, player, color=PointStatus.SPACE):
         pygame.draw.rect (self.screen, color,
-                          pygame.Rect (player.current_loc.x,
-                                       player.current_loc.y, *player.size))
+                          pygame.Rect (player.coordinates.left,
+                                       player.coordinates.top, *player.size))
 
         self.update_element_on_matrix (player.current_loc.get_location_as_tuple (), player.size, color)
 
     def update_element_on_matrix(self, location, size, new_status):
-        for x in range (location[0]-size[0]//2, min (location[0]+ size[0]//2, self.width)):
-            for y in range (location[1]-size[1]//2, min (location[1] + size[1]//2, self.height)):
+        for x in range (max(location[0] - (size[0] // 2) +1,0), min ((location[0] + size[0] // 2)+1, self.width)):
+            for y in range (max(location[1] - (size[1] // 2 )+1,0), min ((location[1] + size[1] // 2)+1, self.height)):
                 self.maze_matrix[x][y].status = new_status
 
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 15
+    MAX_OF_ROOMS = 10
     PLAYER_SIZE = (8, 8)
 
     def __init__(self, height, width, number_of_players):
@@ -128,7 +134,6 @@ class MazeGenerator:
         is_valid_room = True
         for i in range (room_counter):
             if self.rooms[i].is_overlap (new_room):
-                print ('is_overlap , try another loc.')
                 is_valid_room = False
 
         new_room.set_coordinates (Coordinates (left, right, top, bottom))
@@ -169,8 +174,8 @@ class MazeGenerator:
             self.players.append (Player (self.maze.maze_matrix[new_player_cord_x][new_player_cord_y], new_color))
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player (self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
-            """TODO: change play mode key"""
-            self.players[new_player_num].set_play_mode('health',self)
+        for player in self.players:
+            player.set_play_mode(2,self)
 
     def start_game(self):
         done = False
@@ -183,8 +188,14 @@ class MazeGenerator:
             pygame.display.flip ()
 
             for player in self.players:
-                player.step (self)
-                done = self.check_if_game_over ()
+                if not player.step (self):
+                    self.final_results()
+                    done=True
+                    break
+                if self.maze.addons_amount <=0:
+                    self.init_addons()
+                    self.maze.update_matrix_after_init ()
+
                 pygame.display.flip ()
 
     def setup_maze(self, ):
@@ -195,16 +206,21 @@ class MazeGenerator:
         self.init_players (self.number_of_players)
         pygame.display.flip ()
 
-    def check_if_game_over(self):
-        winners=list (filter (lambda player: player.health_points <= 0, self.players))
-        if len(winners) >0 :
-            for winner in winners:
-                print("player {id} Win !!!  ".format(id=winner.id))
-                return  True
+    def final_results(self):
+        winners = list (filter (lambda player: player.health_points > 0, self.players))
+        if len (winners) == 1:
+            print ("player {id} Win !!!  ".format (id=winners[0].id))
+            return True
         return False
 
-    def get_room_by_id(self,id):
-        return [room for room in self.rooms if room.id==id][0]
+    def get_room_by_id(self, id):
+        return [room for room in self.rooms if room.id == id][0]
+
+    def reboot(self):
+        print("reboot is Happening")
+        for player in self.players:
+            player.set_play_mode (player.ammo_points > player.health_points, self)
+
 
 if __name__ == '__main__':
     m = MazeGenerator (600, 600, 2)

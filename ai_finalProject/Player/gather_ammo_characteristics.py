@@ -14,17 +14,23 @@ def ammo_loc(room):
 def do_ammo(player,maze):
 
     if isinstance(player.path[1], str):
-        player.ammo_points = min(player.ammo_points + 10, 100)
-        print ('Player ', player.id, ' Ammo Points : ', player.ammo_point)
-        maze.maze.remove_addon([10, 10], [player.path[0].x,player.path[0].y])
-        player.calculate_play_mode(player,maze)
+        player.add_to_trait('ammo')
+        maze.maze.remove_addon (player.target)
+
+        player.calculate_play_mode(maze)
     else:
         clean_and_stepforward(player,maze)
 
 
 def init_ammo_mode(player,maze):
-    (room_id_target, target) = find_target_room(player.current_loc, maze.rooms, ammo_loc)
-    player.path = a_star(maze.maze_matrix, player, target)
-    a_star_wrapper(player.path, len(player.path))
-    clean_and_stepforward(player, maze)
-
+    (room_id_target, target) = find_target_room (player.current_loc, maze.rooms, ammo_loc)
+    if not room_id_target:
+        print("no ammo left")
+    room_target = maze.get_room_by_id (room_id_target)
+    target_size = (room_target.width, room_target.height)
+    player.target = target
+    if target is None:
+        return player.calculate_play_mode (maze)
+    player.path = a_star (maze.maze.maze_matrix, player, target.location, target_size)
+    if player.path:
+        a_star_wrapper (player.path, len (player.path))

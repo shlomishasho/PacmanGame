@@ -31,9 +31,8 @@ def health_loc(room):
 
 def do_health(player, maze):
     if isinstance (player.path[1], str):
-        player.health_points = min (player.health_points + 10, 100)
-        print ('Player ', player.id, ' Haelth Points : ', player.health_points)
-        maze.maze.remove_addon ([10, 10], [player.target.location[0], player.target.location[1]])
+        player.add_to_trait('health')
+        maze.maze.remove_addon (player.target)
         player.calculate_play_mode (maze)
     else:
         clean_and_stepforward (player, maze)
@@ -41,6 +40,9 @@ def do_health(player, maze):
 
 def init_health_mode(player, maze):
     (room_id_target, target) = find_target_room (player.current_loc, maze.rooms, health_loc)
+    if not room_id_target :
+        print("no health points left")
+
     room_target = maze.get_room_by_id (room_id_target)
     target_size = (room_target.width, room_target.height)
     player.target = target
@@ -49,6 +51,3 @@ def init_health_mode(player, maze):
     player.path = a_star (maze.maze.maze_matrix, player, target.location, target_size)
     if player.path:
         a_star_wrapper (player.path, len (player.path))
-        print ("there is path !! ")
-
-# def find_target(player,maze):

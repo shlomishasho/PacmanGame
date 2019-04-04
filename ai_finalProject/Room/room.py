@@ -3,6 +3,7 @@ from collections import namedtuple
 from random import randint
 from ai_finalProject.Room.addon import Addon
 
+
 Coordinates = namedtuple('Coordinates', 'left right top bottom')
 
 
@@ -68,24 +69,38 @@ class Room:
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
 
+    def get_addon_from_location(self,location):
+        types=['health','ammo']
+        addons=[self.ammo,self.health]
+        for i in range(len(addons)):
+            for addon in addons[i]:
+                if location[0] in range(addon.coordinates.left,addon.coordinates.right):
+                    if location[1] in range(addon.coordinates.top,addon.coordinates.bottom):
+                        addons[i].remove(addon)
+                    return addon,types[i]
+
+        return None,None
+
     def set_room_addons(self, maze):
         ammo_amount = randint(0, 3)
         self._ammo = self._health = []
         health_amount = randint(0, 3)
 
         for i in range(0, ammo_amount):
-            self.ammo.append(self._set_room_addon(maze, self.AMMO))
+            self.ammo.append(self._set_room_addon(maze,'ammo', self.AMMO))
         for i in range(0, health_amount):
-            self.health.append(self._set_room_addon(maze, self.HEALTH))
+            self.health.append(self._set_room_addon(maze,'health', self.HEALTH))
 
-    def _set_room_addon(self, maze, color):
-        new_addon = Addon(color,self.id)
-        x_location = randint(self.coordinates.left, self.coordinates.right)
-        y_location = randint(self.coordinates.top, self.coordinates.bottom)
-        width = max(new_addon.width + x_location, self.coordinates.right) - x_location
-        height = max(y_location + new_addon.height, self.coordinates.bottom) - y_location
-        x_location = max(self.coordinates.left, (x_location - width))
-        y_location = max(self.coordinates.top, (y_location - height))
-        new_addon.location = (x_location, y_location)
-        maze.draw_addons(color, (new_addon.width, new_addon.height,), (x_location, y_location,))
-        return new_addon
+    def _set_room_addon(self, maze,name, color):
+        while True:
+            new_addon = Addon(name,color,self.id)
+            x_location = randint(self.coordinates.left, self.coordinates.right)
+            y_location = randint(self.coordinates.top, self.coordinates.bottom)
+            new_addon.width = min(new_addon.width + x_location, self.coordinates.right) - x_location
+            new_addon.height = min(y_location + new_addon.height, self.coordinates.bottom) - y_location
+            if new_addon.width >1 and new_addon.height >1:
+                x_center=x_location+new_addon.width//2
+                y_center=y_location+new_addon.height//2
+                new_addon.location = (x_center, y_center)
+                maze.draw_addons(color, (new_addon.width , new_addon.height), (x_location, y_location,))
+                return new_addon
