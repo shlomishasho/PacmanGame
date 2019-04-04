@@ -16,18 +16,17 @@ class maze:
         self.height = height
         self.width = width
         pygame.init ()
+        pygame.display.set_caption ('MazeAI')
         self.screen = pygame.display.set_mode ((self.height, self.width))
         self.maze_matrix = self.init_maze_matrix ()
-        self.addons_amount=0
-
-
+        self.addons_amount = 0
 
     # Region functions for init the Maze
     def init_maze_matrix(self):
         return [[Point (x, y) for y in range (self.width)] for x in range (self.height)]
 
     def draw_addons(self, color, size, location):
-        self.addons_amount+=1
+        self.addons_amount += 1
         pygame.draw.rect (self.screen, color, pygame.Rect (location[0], location[1], size[0], size[1]))
 
     def draw_room(self, color, room):
@@ -71,9 +70,10 @@ class maze:
     # End Region
 
     def remove_addon(self, addon):
-        pygame.draw.rect (self.screen, PointStatus.SPACE, pygame.Rect (addon.coordinates.left, addon.coordinates.top,*addon.get_dimensions()))
-        self.update_element_on_matrix (addon.location, addon.get_dimensions(), RoomStatus.SPACE)
-        self.addons_amount-=1
+        pygame.draw.rect (self.screen, PointStatus.SPACE,
+                          pygame.Rect (addon.coordinates.left, addon.coordinates.top, *addon.get_dimensions ()))
+        self.update_element_on_matrix (addon.location, addon.get_dimensions (), RoomStatus.SPACE)
+        self.addons_amount -= 1
         pygame.display.flip ()
 
     def update_player(self, player, color=PointStatus.SPACE):
@@ -84,8 +84,9 @@ class maze:
         self.update_element_on_matrix (player.current_loc.get_location_as_tuple (), player.size, color)
 
     def update_element_on_matrix(self, location, size, new_status):
-        for x in range (max(location[0] - (size[0] // 2) +1,0), min ((location[0] + size[0] // 2)+1, self.width)):
-            for y in range (max(location[1] - (size[1] // 2 )+1,0), min ((location[1] + size[1] // 2)+1, self.height)):
+        for x in range (max (location[0] - (size[0] // 2) + 1, 0), min ((location[0] + size[0] // 2) + 1, self.width)):
+            for y in range (max (location[1] - (size[1] // 2) + 1, 0),
+                            min ((location[1] + size[1] // 2) + 1, self.height)):
                 self.maze_matrix[x][y].status = new_status
 
 
@@ -175,7 +176,7 @@ class MazeGenerator:
             # self.maze.update_player(self.players[new_player_num])
             self.maze.update_player (self.players[new_player_num], PointStatus.PLAYERS[new_player_num])
         for player in self.players:
-            player.set_play_mode(2,self)
+            player.set_play_mode (2, self)
 
     def start_game(self):
         done = False
@@ -189,11 +190,11 @@ class MazeGenerator:
 
             for player in self.players:
                 if not player.step (self):
-                    self.final_results()
-                    done=True
+                    self.final_results ()
+                    done = True
                     break
-                if self.maze.addons_amount <=0:
-                    self.init_addons()
+                if self.maze.addons_amount <= 0:
+                    self.init_addons ()
                     self.maze.update_matrix_after_init ()
 
                 pygame.display.flip ()
@@ -217,7 +218,7 @@ class MazeGenerator:
         return [room for room in self.rooms if room.id == id][0]
 
     def reboot(self):
-        print("reboot is Happening")
+        print ("reboot is Happening")
         for player in self.players:
             player.set_play_mode (player.ammo_points > player.health_points, self)
 

@@ -27,6 +27,10 @@ class RoomStatus (PointStatus):
         point_color_list.extend ([cls.HEALTH, cls.AMMO])
         return point_color_list
 
+    @classmethod
+    def get_addons_colors(cls):
+        return [cls.HEALTH, cls.AMMO]
+
 
 class Point:
 

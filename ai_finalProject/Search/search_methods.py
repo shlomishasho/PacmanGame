@@ -29,7 +29,7 @@ def a_star(maze, player, goal, goal_size):
 
                 if (object_loc_x) >= len (maze[0]) or (object_loc_y) >= len (maze):
                     pass
-                elif is_free_space (object_loc_x, object_loc_y, maze, PointStatus.get_colors_for_player (player),
+                elif is_free_space (object_loc_x, object_loc_y, maze, [PointStatus.WALL],
                                     player.size):
                     # elif maze[object_loc_x][object_loc_y].status in PointStatus.get_colors_for_player (player):
                     new_node = Node (maze[object_loc_x][object_loc_y], target)
@@ -50,6 +50,6 @@ def reached_to(target, target_size, location):
 def is_free_space(x, y, maze, colors, size):
     for i in range (x - size[0] // 2, min(x + size[0] // 2,len(maze))):
         for j in range (y - size[1] // 2, min(y + size[1] // 2,len(maze))):
-            if maze[i][j].status == PointStatus.WALL:
+            if maze[i][j].status in colors:
                 return False
     return True
