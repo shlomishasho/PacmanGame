@@ -92,7 +92,7 @@ class maze:
 
 class MazeGenerator:
     WHITE = (255, 255, 255)
-    MAX_OF_ROOMS = 10
+    MAX_OF_ROOMS = 7
     PLAYER_SIZE = (8, 8)
 
     def __init__(self, height, width, number_of_players):
@@ -224,5 +224,5 @@ class MazeGenerator:
 
 
 if __name__ == '__main__':
-    m = MazeGenerator (600, 600, 2)
+    m = MazeGenerator (800, 800, 2)
     m.start_game ()

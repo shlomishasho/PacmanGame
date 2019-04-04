@@ -4,6 +4,7 @@ from heapq import *
 from ai_finalProject.Search.priorityQueue import *
 
 
+
 def a_star(maze, player, goal, goal_size):
     start = player.current_loc
     target = RoomPoint (goal[0], goal[1])
@@ -11,11 +12,11 @@ def a_star(maze, player, goal, goal_size):
     visited = [(start.x, start.y)]
     path = []
     new_node = Node (start, target)
-    queue = []
-    heappush (queue, new_node)
+    queue = PriorityQueue()
+    queue.push(new_node)
 
     while queue:
-        temp_node = heappop (queue)
+        temp_node = queue.pop_value()
         current_point = temp_node.get_point()
         path.insert(len(path), current_point)
         if reached_to (target, goal_size, current_point):
@@ -23,19 +24,15 @@ def a_star(maze, player, goal, goal_size):
         else:
             for i, j in neighbors:
                 object_loc_x = current_point.x + int (player.size[0]) * i
-                # object_loc_x = current_point.x + i
-                # object_loc_y = current_point.y + j
                 object_loc_y = current_point.y + int (player.size[0]) * j
-
                 if (object_loc_x) >= len (maze[0]) or (object_loc_y) >= len (maze):
                     pass
                 elif is_free_space (object_loc_x, object_loc_y, maze, [PointStatus.WALL],
                                     player.size):
-                    # elif maze[object_loc_x][object_loc_y].status in PointStatus.get_colors_for_player (player):
                     new_node = Node (maze[object_loc_x][object_loc_y], target)
                     if (object_loc_x, object_loc_y) not in visited:
                         visited.append ((object_loc_x, object_loc_y))
-                        heappush (queue, new_node)
+                        queue.push(new_node)
 
     print ('queue is empty')
 

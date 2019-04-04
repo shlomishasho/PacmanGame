@@ -31,6 +31,6 @@ def init_ammo_mode(player,maze):
     player.target = target
     if target is None:
         return player.calculate_play_mode (maze)
-    player.path = a_star (maze.maze.maze_matrix, player, target.location, target_size)
+    player.path = a_star(maze.maze.maze_matrix, player, target.location, target_size)
     if player.path:
         a_star_wrapper (player.path, len (player.path))
